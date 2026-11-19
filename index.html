@@ -1,0 +1,3428 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>조선 신분 체험기: 한양 마을의 하루</title>
+    <meta name="description" content="초등학교 5학년 사회 과목 '조선시대의 신분 질서와 생활 모습'을 체험하는 2D 탑다운 교육용 미니 RPG" />
+    <meta property="og:title" content="조선 신분 체험기: 한양 마을의 하루" />
+    <meta property="og:description" content="양반, 중인, 상민, 천민이 되어 조선시대 신분 질서와 생활 모습을 직접 체험해 보세요." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --hanji-bg: #f6f0e2;
+        --hanji-card: #fcf9f2;
+        --hanji-surface-alt: #f3ebd8;
+        --hanji-border: #d7cab2;
+        --hanji-divider: #e4d9c4;
+        --ink-primary: #241f1c;
+        --ink-secondary: #594f46;
+        --obang-blue: #1e4d7b;
+        --obang-red: #c23b2b;
+        --obang-yellow: #c88a1e;
+        --pine-green: #2f6b48;
+        --clay-brown: #7c5438;
+      }
+
+      *, *::before, *::after {
+        box-sizing: border-box;
+      }
+
+      html, body {
+        margin: 0;
+        padding: 0;
+        min-height: 100%;
+        background-color: var(--hanji-bg);
+        color: var(--ink-primary);
+        font-family: 'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, sans-serif;
+        line-height: 1.5;
+        overflow-x: hidden;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      h1, h2, h3, .font-serif-kr {
+        font-family: 'Gowun Batang', 'Batang', Georgia, serif;
+        margin: 0;
+      }
+
+      p, dl, dd, dt, ul {
+        margin: 0;
+      }
+
+      button {
+        font-family: inherit;
+        border: none;
+        background: none;
+        cursor: pointer;
+        color: inherit;
+      }
+
+      button:focus-visible {
+        outline: 2px solid var(--obang-blue);
+        outline-offset: 2px;
+      }
+
+      .hanji-surface {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background-color: var(--hanji-bg);
+        background-image:
+          radial-gradient(rgba(120, 95, 65, 0.045) 1px, transparent 0),
+          radial-gradient(rgba(160, 130, 95, 0.04) 1px, transparent 0);
+        background-size: 28px 28px;
+        background-position: 0 0, 14px 14px;
+      }
+
+      .hanji-card {
+        background-color: var(--hanji-card);
+        border: 1px solid var(--hanji-border);
+        border-radius: 12px;
+        box-shadow: 0 4px 14px rgba(45, 34, 22, 0.06);
+      }
+
+      .tabular-nums {
+        font-variant-numeric: tabular-nums;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      /* Top Header */
+      .topbar {
+        border-bottom: 1px solid var(--hanji-border);
+        background: rgba(250, 246, 236, 0.94);
+        backdrop-filter: blur(4px);
+      }
+
+      .topbar-inner {
+        max-width: 1152px;
+        margin: 0 auto;
+        padding: 0 20px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+      }
+
+      .brand-title {
+        font-family: 'Gowun Batang', 'Batang', serif;
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--ink-primary);
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .nav-link-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--ink-secondary);
+        padding: 6px 2px;
+        white-space: nowrap;
+        transition: color 0.15s ease;
+      }
+
+      .nav-link-btn:hover {
+        color: var(--ink-primary);
+        text-decoration: underline;
+        text-underline-offset: 4px;
+      }
+
+      .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #ffffff;
+        background-color: var(--obang-blue);
+        white-space: nowrap;
+        transition: opacity 0.15s ease, background-color 0.15s ease;
+      }
+
+      .btn-primary:hover {
+        opacity: 0.92;
+      }
+
+      .btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 9px 16px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--ink-secondary);
+        border: 1px solid var(--hanji-border);
+        background-color: transparent;
+        white-space: nowrap;
+        transition: background-color 0.15s ease;
+      }
+
+      .btn-secondary:hover {
+        background-color: #efe7d6;
+      }
+
+      /* Role Select Page */
+      .menu-main {
+        flex: 1;
+        max-width: 1152px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 32px 20px 44px;
+      }
+
+      .hero-strip {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 16px;
+        border-bottom: 1px solid var(--hanji-border);
+        padding-bottom: 24px;
+        margin-bottom: 28px;
+      }
+
+      .hero-kicker {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--obang-blue);
+        margin-bottom: 6px;
+      }
+
+      .hero-title {
+        font-size: clamp(26px, 3.2vw, 36px);
+        font-weight: 700;
+        line-height: 1.25;
+        color: var(--ink-primary);
+        text-wrap: balance;
+      }
+
+      .hero-desc {
+        margin-top: 10px;
+        font-size: 15px;
+        color: var(--ink-secondary);
+        max-width: 660px;
+        line-height: 1.6;
+      }
+
+      .hero-controls-note {
+        font-size: 13px;
+        color: var(--ink-secondary);
+        text-align: right;
+      }
+
+      .hero-controls-note strong {
+        display: block;
+        color: var(--ink-primary);
+        font-weight: 600;
+        margin-top: 2px;
+      }
+
+      .role-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+      }
+
+      .role-card {
+        padding: 22px 24px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
+        transition: transform 0.16s ease;
+      }
+
+      .role-card:hover {
+        transform: translateY(-2px);
+      }
+
+      .stamp-corner {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        transform: rotate(-10deg);
+        pointer-events: none;
+      }
+
+      .role-meta-line {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        font-size: 12.5px;
+        font-weight: 500;
+        color: var(--ink-secondary);
+        margin-bottom: 12px;
+        padding-right: 58px;
+      }
+
+      .role-header-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+      }
+
+      .role-name {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--ink-primary);
+        padding-right: 40px;
+      }
+
+      .role-sub {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--ink-secondary);
+        margin-top: 3px;
+      }
+
+      .role-details {
+        margin-top: 16px;
+        padding-top: 14px;
+        border-top: 1px solid var(--hanji-divider);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        font-size: 14px;
+      }
+
+      .role-detail-row {
+        display: flex;
+        gap: 10px;
+      }
+
+      .role-detail-row dt {
+        width: 48px;
+        flex-shrink: 0;
+        font-weight: 700;
+        color: var(--ink-primary);
+      }
+
+      .role-detail-row dd {
+        color: #4a423b;
+        line-height: 1.45;
+      }
+
+      .role-card-footer {
+        margin-top: 18px;
+        padding-top: 14px;
+        border-top: 1px solid var(--hanji-divider);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .role-status-text {
+        font-size: 12.5px;
+        color: var(--ink-secondary);
+      }
+
+      /* Game HUD & Stage */
+      .game-hud {
+        border-bottom: 1px solid var(--hanji-border);
+        background: rgba(250, 246, 236, 0.96);
+        padding: 10px 16px;
+      }
+
+      .game-hud-inner {
+        max-width: 1152px;
+        margin: 0 auto;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .hud-left, .hud-center, .hud-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .reputation-wrap {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+      }
+
+      .reputation-track {
+        width: 96px;
+        height: 10px;
+        border-radius: 999px;
+        background: #e4d9c4;
+        border: 1px solid #cbbfa8;
+        overflow: hidden;
+      }
+
+      .reputation-fill {
+        height: 100%;
+        background-color: var(--pine-green);
+        transition: width 0.2s ease, background-color 0.2s ease;
+      }
+
+      .game-main {
+        flex: 1;
+        max-width: 1152px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 12px 16px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .quest-strip {
+        padding: 10px 16px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+
+      .quest-strip-left {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        min-width: 0;
+      }
+
+      .quest-meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: var(--ink-secondary);
+      }
+
+      .quest-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--ink-primary);
+      }
+
+      .quest-hint {
+        font-size: 12.5px;
+        color: var(--ink-secondary);
+      }
+
+      .royal-alert {
+        border-radius: 10px;
+        padding: 10px 16px;
+        background-color: var(--obang-red);
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        box-shadow: 0 4px 12px rgba(194, 59, 43, 0.25);
+        font-size: 13.5px;
+        font-weight: 700;
+      }
+
+      .royal-alert-btn {
+        padding: 6px 12px;
+        border-radius: 6px;
+        background: #ffffff;
+        color: var(--obang-red);
+        font-size: 12px;
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+
+      .canvas-stage {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 960 / 580;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 2px solid #8d7b64;
+        background-color: #d9dfbf;
+        box-shadow: 0 8px 24px rgba(36, 31, 28, 0.14);
+      }
+
+      #game-canvas {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      .toast-banner {
+        position: absolute;
+        top: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 8px 16px;
+        border-radius: 8px;
+        background: rgba(36, 31, 28, 0.9);
+        color: #faf6ec;
+        font-size: 13px;
+        font-weight: 500;
+        pointer-events: none;
+        white-space: nowrap;
+        max-width: 90%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .talk-prompt {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 8px;
+        background: rgba(252, 249, 242, 0.95);
+        border: 1px solid var(--obang-yellow);
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--ink-primary);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      }
+
+      /* Touch Joystick & Action Buttons */
+      .joystick-zone {
+        position: absolute;
+        bottom: 12px;
+        left: 12px;
+        width: 112px;
+        height: 112px;
+        border-radius: 999px;
+        border: 2px solid rgba(122, 104, 82, 0.6);
+        background: rgba(250, 246, 236, 0.78);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        touch-action: none;
+        user-select: none;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+      }
+
+      .joystick-ring {
+        position: absolute;
+        inset: 8px;
+        border-radius: 999px;
+        border: 1px dashed rgba(166, 148, 122, 0.55);
+        pointer-events: none;
+      }
+
+      .joystick-knob {
+        width: 46px;
+        height: 46px;
+        border-radius: 999px;
+        background: rgba(36, 31, 28, 0.85);
+        border: 2px solid #fdfbf6;
+        pointer-events: none;
+        transition: transform 0.06s linear;
+      }
+
+      .action-pad {
+        position: absolute;
+        bottom: 12px;
+        right: 12px;
+        display: flex;
+        align-items: flex-end;
+        gap: 8px;
+      }
+
+      .action-btn {
+        min-height: 54px;
+        padding: 6px 14px;
+        border-radius: 12px;
+        font-size: 12.5px;
+        font-weight: 700;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.14);
+        white-space: nowrap;
+        transition: background-color 0.15s ease, opacity 0.15s ease;
+      }
+
+      .action-btn small {
+        font-size: 10px;
+        font-weight: 400;
+        opacity: 0.85;
+      }
+
+      .btn-rude {
+        min-height: 44px;
+        padding: 6px 11px;
+        background: rgba(252, 249, 242, 0.92);
+        color: #9e2e24;
+        border: 1px solid rgba(194, 59, 43, 0.5);
+      }
+
+      .btn-rude:hover {
+        background: #f5e1df;
+      }
+
+      .btn-bow {
+        background: rgba(252, 249, 242, 0.95);
+        color: var(--obang-blue);
+        border: 1px solid rgba(30, 77, 123, 0.5);
+      }
+
+      .btn-bow.active {
+        background: var(--pine-green);
+        color: #ffffff;
+        border-color: #1e4a30;
+      }
+
+      .btn-talk {
+        background: var(--obang-yellow);
+        color: #ffffff;
+        border: 1px solid #8e5f0e;
+      }
+
+      .btn-talk:disabled {
+        background: rgba(229, 222, 201, 0.85);
+        color: #8a7f6e;
+        border-color: #cbbfa8;
+        cursor: not-allowed;
+      }
+
+      .controls-footer {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        font-size: 12px;
+        color: var(--ink-secondary);
+        padding: 0 4px;
+      }
+
+      /* Modals */
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        background: rgba(0, 0, 0, 0.52);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        overflow-y: auto;
+      }
+
+      .modal-card {
+        width: 100%;
+        max-width: 560px;
+        padding: 24px;
+        position: relative;
+        margin: auto;
+      }
+
+      .modal-card.wide {
+        max-width: 760px;
+      }
+
+      .modal-close {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--ink-secondary);
+      }
+
+      .modal-close:hover {
+        background: #efe7d6;
+      }
+
+      .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid var(--hanji-border);
+      }
+
+      .info-box {
+        border-radius: 8px;
+        background: var(--hanji-surface-alt);
+        border: 1px solid var(--hanji-border);
+        padding: 14px;
+        font-size: 13.5px;
+        color: #3d352e;
+        line-height: 1.6;
+      }
+
+      .quiz-choice {
+        width: 100%;
+        text-align: left;
+        padding: 12px 14px;
+        border-radius: 8px;
+        border: 1px solid var(--hanji-border);
+        background: #faf6ec;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--ink-primary);
+        transition: background-color 0.15s ease;
+      }
+
+      .quiz-choice:hover:not(:disabled) {
+        background: #efe6d2;
+      }
+
+      .quiz-feedback {
+        margin-top: 14px;
+        border-radius: 8px;
+        padding: 12px 14px;
+        font-size: 13.5px;
+        border: 1px solid;
+      }
+
+      .quiz-feedback.ok {
+        background: #e9f3ec;
+        border-color: rgba(47, 107, 72, 0.45);
+        color: #1f4a31;
+      }
+
+      .quiz-feedback.err {
+        background: #f9e8e6;
+        border-color: rgba(194, 59, 43, 0.45);
+        color: #8b2318;
+      }
+
+      .comparison-table-wrap {
+        overflow-x: auto;
+        border-radius: 8px;
+        border: 1px solid var(--hanji-border);
+      }
+
+      table.comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13.5px;
+        text-align: left;
+      }
+
+      table.comparison-table th {
+        background: #efe6d2;
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--hanji-border);
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      table.comparison-table td {
+        padding: 10px 12px;
+        border-top: 1px solid var(--hanji-divider);
+        color: #4a423b;
+        vertical-align: top;
+      }
+
+      .map-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .map-zone {
+        border-radius: 8px;
+        padding: 12px;
+        font-size: 13px;
+        border: 1px solid var(--hanji-border);
+      }
+
+      @media (max-width: 768px) {
+        .role-grid {
+          grid-template-columns: 1fr;
+        }
+        .hero-controls-note {
+          text-align: left;
+        }
+        .topbar-inner {
+          gap: 12px;
+        }
+        .nav-links {
+          gap: 12px;
+        }
+        .talk-prompt {
+          display: none;
+        }
+        .joystick-zone {
+          width: 96px;
+          height: 96px;
+          bottom: 8px;
+          left: 8px;
+        }
+        .joystick-knob {
+          width: 40px;
+          height: 40px;
+        }
+        .action-pad {
+          bottom: 8px;
+          right: 8px;
+          gap: 6px;
+        }
+        .action-btn {
+          min-height: 46px;
+          padding: 5px 10px;
+          font-size: 11.5px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script>
+      (function () {
+        'use strict';
+
+        // -------------------------------------------------------------------
+        // 1. CONSTANTS & EDUCATIONAL DATA
+        // -------------------------------------------------------------------
+        var MAP_WIDTH = 1600;
+        var MAP_HEIGHT = 1120;
+        var VIEW_W = 960;
+        var VIEW_H = 580;
+        var ROYAL_ROAD_Y_MIN = 475;
+        var ROYAL_ROAD_Y_MAX = 595;
+        var STREAM_X_MIN = 795;
+        var STREAM_X_MAX = 855;
+        var STORAGE_KEY = 'joseon_status_rpg_cleared_v1';
+
+        var BRIDGES = [
+          { x: 785, y: 285, w: 80, h: 105 },
+          { x: 785, y: 470, w: 80, h: 130 },
+          { x: 785, y: 785, w: 80, h: 110 }
+        ];
+
+        function mustBowToNpc(playerRank, npcRank) {
+          // 상민·천민은 양반(3)과 중인(2)에게만 인사하며, 천민은 상민(1)에게 인사할 필요 없음
+          return npcRank > playerRank && npcRank >= 2;
+        }
+
+        var ROLES = [
+          {
+            id: 'yangban',
+            rank: 3,
+            rankLabel: '양반',
+            characterName: '선비 이도령',
+            title: '학문과 예법을 지키는 사대부',
+            stars: 1,
+            difficultyText: '쉬움',
+            accentHex: '#1E4D7B',
+            clothesDesc: '검은 갓과 푸른 도포를 단정히 차려입고 위엄 있게 걷습니다.',
+            roleDesc: '과거 시험을 보아 벼슬에 오를 수 있으며, 아랫신분에게 인사를 받습니다.',
+            summaryPoints: {
+              privilege: '과거 시험 응시 자격이 있고 세금과 군역을 면제받았습니다.',
+              duty: '유교적 예법과 학문을 닦고 백성을 다스리는 책임을 졌습니다.',
+              dailyLife: '기와집에 살며 서당에서 공부했지만, 임금님의 행차 앞에서는 반드시 엎드려야 했습니다.'
+            },
+            missionTitle: '과거 급제와 백성의 민원 해결',
+            missionSummary: '서당에서 과거 시험을 치르고, 장터 백성의 민원을 받아 관아에 전하세요.',
+            baseSpeed: 182,
+            startPos: { x: 420, y: 335 },
+            steps: [
+              {
+                id: 'yb_1',
+                title: '청학 서당에서 과거 시험(문과) 치르기',
+                targetNpcId: 'teacher_hoon',
+                targetHint: '서당 앞 훈장님과 대화해 과거 시험 3문제를 풀어보세요.',
+                triggersQuiz: true,
+                completionLine: '장원 급제다! 이제 저잣거리 백성들의 어려운 사정을 살펴보거라.'
+              },
+              {
+                id: 'yb_2',
+                title: '저잣거리 싸전에서 백성의 민원 듣기',
+                targetNpcId: 'market_woman',
+                targetHint: '남동쪽 저잣거리 싸전 앞 장터 아낙네에게 민원을 들어주세요.',
+                grantsCarry: '백성 민원서',
+                triggersRoyalEvent: true,
+                completionLine: '나리, 흉년이라 세금이 너무 무겁습니다. 관아에 이 사정을 꼭 전해주세요!'
+              },
+              {
+                id: 'yb_3',
+                title: '관아의 조 사또에게 민원서 전달하기',
+                targetNpcId: 'magistrate_cho',
+                targetHint: '북동쪽 한양 관아로 이동해 조 사또에게 민원서를 전달하세요. (왕의 행차 주의!)',
+                requiresCarry: '백성 민원서',
+                completionLine: '백성들의 딱한 사정을 잘 전해 주었소. 세금을 덜어 주도록 조처하겠소!'
+              }
+            ]
+          },
+          {
+            id: 'jungin',
+            rank: 2,
+            rankLabel: '중인',
+            characterName: '역관 겸 의원 지석',
+            title: '전문 지식을 갖춘 중간 계층',
+            stars: 2,
+            difficultyText: '보통',
+            accentHex: '#C88A1E',
+            clothesDesc: '관리용 모자인 사모와 단정한 갈색 관복을 입고 의술 주머니를 찹니다.',
+            roleDesc: '통역·의술·법률 등 전문 기술을 맡으며, 상민·천민에게 인사를 받지만 양반은 공경해야 합니다.',
+            summaryPoints: {
+              privilege: '잡과에 합격해 역관·의관·아전 등 전문직 관직을 세습하며 풍족하게 살았습니다.',
+              duty: '외국어 통역, 치료, 행정 실무를 담당하며 양반에게 깍듯한 예를 갖췄습니다.',
+              dailyLife: '능력이 뛰어나도 양반이 아니기 때문에 높은 벼슬(고위직)로 승진하기는 어려웠습니다.'
+            },
+            missionTitle: '사신단 통역 문서 수령과 어르신 진맥',
+            missionSummary: '관아에서 문서를 받고 약초를 구해 양반 댁 어르신을 치료하세요.',
+            baseSpeed: 188,
+            startPos: { x: 1030, y: 375 },
+            steps: [
+              {
+                id: 'ji_1',
+                title: '관아에서 사신단 통역 문서 챙기기',
+                targetNpcId: 'magistrate_cho',
+                targetHint: '관아 앞 조 사또(양반)께 먼저 예절 인사를 올린 뒤 문서를 받으세요.',
+                grantsCarry: '사신단 통역 문서',
+                completionLine: '지석 의원, 고생이 많네. 통역 문서를 챙겼으니 이제 약재방에 들러 보게.'
+              },
+              {
+                id: 'ji_2',
+                title: '저잣거리 약재방에서 약초 꾸러미 받기',
+                targetNpcId: 'herb_merchant',
+                targetHint: '남동쪽 저잣거리 약재방 허 의원에게 귀한 약초를 받아 가세요.',
+                grantsCarry: '진맥용 약초 꾸러미',
+                completionLine: '양반 댁 어르신께 드릴 인삼과 약초를 정성껏 싸 두었습니다.'
+              },
+              {
+                id: 'ji_3',
+                title: '북서쪽 양반 댁 김 대감 어르신 진맥하기',
+                targetNpcId: 'elder_kim',
+                targetHint: '북서쪽 기와집 앞 김 대감 어르신께 예절을 갖추고 진맥해 드리세요.',
+                requiresCarry: '진맥용 약초 꾸러미',
+                completionLine: '아이고, 지석 의원의 약초 덕분에 기운이 확 도는구나. 참으로 고맙네!'
+              }
+            ]
+          },
+          {
+            id: 'sangmin',
+            rank: 1,
+            rankLabel: '상민',
+            characterName: '농민 덕배',
+            title: '나라의 살림을 떠받친 백성',
+            stars: 3,
+            difficultyText: '도전',
+            accentHex: '#2F6B48',
+            clothesDesc: '대나무로 엮은 패랭이를 쓰고 소박한 무명 저고리와 조끼를 입습니다.',
+            roleDesc: '농사·상업·수공업에 종사하며 세금(조세)과 군역·부역의 의무를 집니다.',
+            summaryPoints: {
+              privilege: '법적으로는 자유로운 양인이었으나, 실제로는 생계를 위해 쉴 틈 없이 일했습니다.',
+              duty: '수확한 곡식으로 세금(조세)을 내고 군대나 공사(역)에 동원되는 의무를 졌습니다.',
+              dailyLife: '초가집에 살며 쌀밥보다 잡곡밥을 먹는 날이 많았고, 양반과 중인에게 항상 공손해야 했습니다.'
+            },
+            missionTitle: '세금 쌀가마니 납부와 호미 수리',
+            missionSummary: '무거운 쌀가마니를 관아에 세금으로 바치고, 대장간에서 농기구를 고치세요.',
+            baseSpeed: 185,
+            startPos: { x: 145, y: 865 },
+            steps: [
+              {
+                id: 'sm_1',
+                title: '농가 앞에서 세금용 쌀가마니 짊어지기',
+                targetNpcId: 'mother_deok',
+                targetHint: '초가집 앞 어머니와 대화해 관아에 바칠 쌀가마니를 짊어지세요.',
+                grantsCarry: '무거운 쌀가마니',
+                triggersRoyalEvent: true,
+                completionLine: '덕배야, 쌀이 무거워 걸음이 느려질 테니 길에서 양반과 왕의 행차를 각별히 조심하거라!'
+              },
+              {
+                id: 'sm_2',
+                title: '관아의 박 아전에게 세금(조세) 납부하기',
+                targetNpcId: 'ajeon_park',
+                targetHint: '북동쪽 관아 앞 박 아전(중인)에게 정중히 인사한 뒤 쌀가마니를 바치세요.',
+                requiresCarry: '무거운 쌀가마니',
+                grantsCarry: '수고 엽전',
+                completionLine: '올해 조세를 빠짐없이 냈구나! 남은 엽전으로 대장간에 들러 보거라.'
+              },
+              {
+                id: 'sm_3',
+                title: '대장간에서 무뎌진 호미 수리하기',
+                targetNpcId: 'blacksmith_kang',
+                targetHint: '남서쪽 무쇠 대장간 강 대장장이에게 엽전을 내고 호미를 고치세요.',
+                requiresCarry: '수고 엽전',
+                completionLine: '자, 날이 번쩍이는 새 호미가 되었소! 올해 농사도 힘내시게!'
+              }
+            ]
+          },
+          {
+            id: 'cheonmin',
+            rank: 0,
+            rankLabel: '천민',
+            characterName: '노비 돌쇠',
+            title: '가장 낮은 곳에서 일한 사람들',
+            stars: 4,
+            difficultyText: '어려움',
+            accentHex: '#7C5438',
+            clothesDesc: '튼튼하고 활동하기 편한 짧은 저고리와 머리에 질끈 동여맨 수건을 씁니다.',
+            roleDesc: '양반 댁이나 관아에 소속되어 궂은일과 심부름을 도맡아 하며 자유가 제한됩니다.',
+            summaryPoints: {
+              privilege: '재산으로 취급되어 매매·상속되기도 했으며, 과거 시험이나 관직 진출이 금지되었습니다.',
+              duty: '주인집의 농사, 가사, 심부름을 도맡아 했고 부모 중 한쪽만 천민이어도 신분이 물려졌습니다.',
+              dailyLife: '발이 빠르고 부지런했으나 양반과 중인 앞에서 늘 고개를 숙이고 조심해야 했습니다.'
+            },
+            missionTitle: '마님 심부름으로 저잣거리 비단 사 오기',
+            missionSummary: '순찰하는 양반들과 부딪히지 않게 조심하며 비단을 사서 마님께 전해드리세요.',
+            baseSpeed: 220,
+            startPos: { x: 140, y: 390 },
+            steps: [
+              {
+                id: 'cm_1',
+                title: '양반 댁 한씨 마님께 심부름 지시받기',
+                targetNpcId: 'lady_han',
+                targetHint: '기와집 앞 마님(양반)께 공손히 예절 인사를 올린 뒤 심부름 돈을 받으세요.',
+                grantsCarry: '마님의 엽전 꾸러미',
+                completionLine: '돌쇠야, 저잣거리 비단 가게에서 가장 고운 비단을 사 오너라. 길에서 양반 나리들께 결례를 범하지 말거라!'
+              },
+              {
+                id: 'cm_2',
+                title: '저잣거리 비단 가게에서 고운 비단 사기',
+                targetNpcId: 'silk_merchant',
+                targetHint: '남동쪽 저잣거리 비단 가게로 가세요. 순찰 양반을 만나면 꼭 멈춰 인사해야 해요!',
+                requiresCarry: '마님의 엽전 꾸러미',
+                grantsCarry: '고운 비단 보따리',
+                completionLine: '마님께서 찾으시던 최고급 비단이 여기 있네. 조심히 모시고 돌아가게!'
+              },
+              {
+                id: 'cm_3',
+                title: '양반 댁으로 돌아가 마님께 비단 바치기',
+                targetNpcId: 'lady_han',
+                targetHint: '북서쪽 양반 댁 한씨 마님께 예절을 갖추고 비단을 전해 드리세요.',
+                requiresCarry: '고운 비단 보따리',
+                completionLine: '돌쇠야, 시간 맞춰 잘 다녀왔구나. 수고했다!'
+              }
+            ]
+          }
+        ];
+
+        var BUILDINGS = [
+          { id: 'b_yangban', name: '김 대감 댁', subLabel: '양반 기와집', kind: 'giwa_house', x: 130, y: 95, w: 225, h: 165, doorX: 242, doorY: 265 },
+          { id: 'b_seodang', name: '청학 서당', subLabel: '선비 학당', kind: 'seodang', x: 470, y: 105, w: 215, h: 150, doorX: 577, doorY: 260 },
+          { id: 'b_gwanna', name: '한양 관아', subLabel: '행정·재판소', kind: 'gwanna', x: 1050, y: 90, w: 300, h: 185, doorX: 1200, doorY: 280 },
+          { id: 'b_choga', name: '덕배네 집', subLabel: '상민 초가집', kind: 'choga_house', x: 150, y: 690, w: 185, h: 135, doorX: 242, doorY: 830 },
+          { id: 'b_blacksmith', name: '무쇠 대장간', subLabel: '농기구 수리', kind: 'blacksmith', x: 470, y: 700, w: 180, h: 130, doorX: 560, doorY: 835 },
+          { id: 'b_silk', name: '비단 가게', subLabel: '저잣거리', kind: 'market_silk', x: 980, y: 685, w: 165, h: 120, doorX: 1062, doorY: 810 },
+          { id: 'b_herbs', name: '약재방', subLabel: '저잣거리', kind: 'market_herbs', x: 1225, y: 685, w: 165, h: 120, doorX: 1307, doorY: 810 },
+          { id: 'b_rice', name: '장터 싸전', subLabel: '곡식 가게', kind: 'market_rice', x: 1100, y: 910, w: 175, h: 115, doorX: 1187, doorY: 905 }
+        ];
+
+        var STONE_WALLS = [
+          { x: 95, y: 280, w: 75, h: 20 },
+          { x: 315, y: 280, w: 75, h: 20 },
+          { x: 1010, y: 295, w: 95, h: 20 },
+          { x: 1295, y: 295, w: 95, h: 20 }
+        ];
+
+        var TREES = [
+          { id: 't1', x: 68, y: 120, kind: 'pine', radius: 22 },
+          { id: 't2', x: 405, y: 120, kind: 'plum', radius: 20 },
+          { id: 't3', x: 735, y: 130, kind: 'pine', radius: 22 },
+          { id: 't4', x: 955, y: 140, kind: 'pine', radius: 22 },
+          { id: 't5', x: 1435, y: 150, kind: 'plum', radius: 22 },
+          { id: 't6', x: 1470, y: 390, kind: 'bamboo', radius: 20 },
+          { id: 't7', x: 75, y: 400, kind: 'plum', radius: 20 },
+          { id: 't8', x: 75, y: 690, kind: 'pine', radius: 22 },
+          { id: 't9', x: 705, y: 710, kind: 'plum', radius: 20 },
+          { id: 't10', x: 1470, y: 740, kind: 'pine', radius: 22 },
+          { id: 't11', x: 1445, y: 980, kind: 'bamboo', radius: 20 },
+          { id: 't12', x: 925, y: 980, kind: 'plum', radius: 20 }
+        ];
+
+        var NPCS = [
+          {
+            id: 'lady_han', name: '한씨 마님', roleTitle: '양반', rank: 3, x: 290, y: 318,
+            outfitColor: '#3A6B9C', hatType: 'binyeo', royalEtiquette: 'prostrate', locationZone: '김 대감 댁 앞',
+            historyTip: '조선시대 양반 집안의 여인들은 비단옷과 가락지 등으로 신분을 드러냈고, 바깥출입이 자유롭지 못해 노비에게 심부름을 시켰어요.',
+            defaultGreeting: '오늘 날씨가 참 화창하구나. 집안 단속을 철저히 해야지.',
+            higherRankReply: '음, 예절을 아는구나. 볼일이 있으면 말해보아라.',
+            lowerRankReply: '어서 오십시오, 나리. 오늘도 평안하신지요?'
+          },
+          {
+            id: 'elder_kim', name: '김 대감 어르신', roleTitle: '양반·고위관료', rank: 3, x: 192, y: 320,
+            outfitColor: '#1E4D7B', hatType: 'gat', royalEtiquette: 'gukgung', locationZone: '김 대감 댁 앞',
+            historyTip: '정3품 당상관 이상의 고위 관료는 어가가 지나갈 때 바닥에 엎드리지 않고, 길가에 서서 두 손을 모으고 허리를 깊이 숙여 절하는 국궁(鞠躬)을 했어요.',
+            defaultGreeting: '에구, 환절기라 그런지 기운이 예전 같지 않구나.',
+            higherRankReply: '허허, 깍듯하게 인사를 올리는 태도가 참 바르구나.',
+            lowerRankReply: '이 도령, 반갑네! 과거 공부는 잘 되어 가시는가?'
+          },
+          {
+            id: 'teacher_hoon', name: '청학 훈장님', roleTitle: '양반', rank: 3, x: 577, y: 305,
+            outfitColor: '#2B4C65', hatType: 'gat', royalEtiquette: 'prostrate', locationZone: '청학 서당 앞',
+            historyTip: '양반 자제들은 어릴 때부터 서당에서 천자문과 유교 경전을 배우고, 성장하면 과거 시험(문과)을 쳐서 높은 관직에 올랐어요.',
+            defaultGreeting: '하늘 천, 따 지... 배움에는 끝이 없는 법이지.',
+            higherRankReply: '예의를 갖추니 보기 좋구나. 학문을 게을리하지 말거라.',
+            lowerRankReply: '이 도령! 오늘 문과 시험을 치를 준비는 되었는가?'
+          },
+          {
+            id: 'ajeon_park', name: '박 아전', roleTitle: '중인·하급관리', rank: 2, x: 1150, y: 332,
+            outfitColor: '#8B6224', hatType: 'jungin_cap', royalEtiquette: 'prostrate', locationZone: '한양 관아 앞',
+            historyTip: '아전은 지방 관아에서 세금을 거두고 문서를 정리하는 중인이에요. 하급 관리는 어가를 만나면 말에서 내려 길가에 엎드려 절했어요.',
+            defaultGreeting: '오늘 들어올 조세 장부를 빠짐없이 정리해야겠어.',
+            higherRankReply: '오, 인사가 아주 바르군. 수고가 많네.',
+            lowerRankReply: '나리, 안녕하십니까! 관아에는 무슨 일로 오셨습니까?'
+          },
+          {
+            id: 'magistrate_cho', name: '조 사또', roleTitle: '양반·고위관료', rank: 3, x: 1265, y: 326,
+            outfitColor: '#8C2D2D', hatType: 'gat', royalEtiquette: 'gukgung', locationZone: '한양 관아 앞',
+            historyTip: '사또(수령)는 임금의 명을 받아 고을을 다스리는 양반 관리였어요. 당상관 고위 관료는 어가 앞에서 서서 허리를 깊이 숙이는 국궁(鞠躬)으로 예를 올렸답니다.',
+            defaultGreeting: '고을이 평안한지 두루 살피고 있노라.',
+            higherRankReply: '예법이 바르니 갸륵하구나. 용건을 말해보아라.',
+            lowerRankReply: '어허, 이 도령 오셨는가! 마침 자네를 기다리고 있었네.'
+          },
+          {
+            id: 'mother_deok', name: '덕배 어머니', roleTitle: '상민', rank: 1, x: 242, y: 855,
+            outfitColor: '#6E856B', hatType: 'binyeo', royalEtiquette: 'prostrate', locationZone: '덕배네 초가집 앞',
+            historyTip: '상민은 주로 짚으로 지붕을 이은 초가집에서 살았어요. 한 해 동안 정성껏 지은 곡식의 일부를 나라에 세금(조세)으로 냈답니다.',
+            defaultGreeting: '올해는 비가 알맞게 와서 벼가 제법 잘 여물었구나.',
+            higherRankReply: '아이고, 예의가 바르시군요. 조심해서 다녀오세요.',
+            lowerRankReply: '아이고 나리! 누추한 곳까지 어쩐 일이십니까?'
+          },
+          {
+            id: 'blacksmith_kang', name: '강 대장장이', roleTitle: '상민', rank: 1, x: 560, y: 862,
+            outfitColor: '#665242', hatType: 'bandana', royalEtiquette: 'prostrate', locationZone: '무쇠 대장간 앞',
+            historyTip: '수공업자와 상인은 상민에 속했어요. 쇠를 달궈 호미·낫·쟁기 같은 농기구를 만들고 고쳐 주며 생활했답니다.',
+            defaultGreeting: '쨍그랑! 튼튼한 농기구가 있어야 풍년이 들지!',
+            higherRankReply: '허허, 이렇게 공손히 인사해 주시니 고맙소.',
+            lowerRankReply: '아이고 나리, 쇠 두드리는 소리가 시끄럽지 않으셨는지요!'
+          },
+          {
+            id: 'silk_merchant', name: '비단 장수 오씨', roleTitle: '상민', rank: 1, x: 1062, y: 832,
+            outfitColor: '#A67A4B', hatType: 'paeraengi', royalEtiquette: 'prostrate', locationZone: '저잣거리 비단 가게',
+            historyTip: '조선시대에는 신분에 따라 입을 수 있는 옷감과 색깔이 달랐어요. 비단은 주로 양반들이 입었고 상민과 천민은 무명·삼베옷을 입었어요.',
+            defaultGreeting: '곱고 빛깔 좋은 비단이 들어왔소! 구경하고 가시오!',
+            higherRankReply: '아이고, 공손하신 분이네. 어서 오시오!',
+            lowerRankReply: '귀하신 나리께서 오셨군요! 최고급 비단을 내어 오겠습니다!'
+          },
+          {
+            id: 'herb_merchant', name: '허 의원', roleTitle: '중인', rank: 2, x: 1307, y: 832,
+            outfitColor: '#7E5E2A', hatType: 'jungin_cap', royalEtiquette: 'prostrate', locationZone: '저잣거리 약재방',
+            historyTip: '의원은 중인 계층의 대표적인 전문직이었어요. 약초를 달여 병을 고쳤지만 신분의 벽 때문에 고위 관직에는 오르기 힘들었어요.',
+            defaultGreeting: '좋은 약초는 몸의 기운을 다스리는 데 꼭 필요하지요.',
+            higherRankReply: '참으로 공손하시군. 필요한 약재가 있는가?',
+            lowerRankReply: '나리, 안녕하십니까! 귀한 약재를 정성껏 준비했습니다.'
+          },
+          {
+            id: 'market_woman', name: '장터 아낙네', roleTitle: '상민', rank: 1, x: 1187, y: 888,
+            outfitColor: '#8B7963', hatType: 'binyeo', royalEtiquette: 'prostrate', locationZone: '저잣거리 싸전',
+            historyTip: '상민들은 나라에 세금을 내는 것뿐만 아니라 성을 쌓거나 길을 닦는 노역(부역)과 군역도 감당해야 했어요.',
+            defaultGreeting: '올해는 가뭄도 있었는데 세금 걱정이 태산이에요.',
+            higherRankReply: '아이고, 예의가 바르시군요. 장터 구경 잘하세요.',
+            lowerRankReply: '나리! 저희 백성들의 어려운 사정을 제발 살펴주시옵소서!'
+          },
+          {
+            id: 'patrol_yangban_1', name: '순찰 양반 이 생원', roleTitle: '양반·하급관리', rank: 3, x: 390, y: 350,
+            patrolPoints: [{ x: 390, y: 350 }, { x: 390, y: 440 }, { x: 700, y: 440 }, { x: 700, y: 350 }],
+            speed: 68, outfitColor: '#274E78', hatType: 'gat', royalEtiquette: 'prostrate', locationZone: '서당·양반가 산책로',
+            historyTip: '길에서 양반을 만나면 아랫신분은 걸음을 멈추고 고개를 숙여 예를 표해야 했어요. 하지만 하급 관리는 왕의 어가 앞에서 말에서 내려 엎드렸답니다.',
+            defaultGreeting: '마을의 기강이 바로 서야 나라가 편안한 법이지.',
+            higherRankReply: '음, 예의를 지킬 줄 아는구나. 지나가도 좋다.',
+            lowerRankReply: '이 도령, 오늘도 산책 중이신가? 참 화창한 날이오.'
+          },
+          {
+            id: 'patrol_yangban_2', name: '엄격한 박 진사', roleTitle: '양반·하급관리', rank: 3, x: 930, y: 365,
+            patrolPoints: [{ x: 930, y: 365 }, { x: 930, y: 635 }, { x: 1380, y: 635 }, { x: 930, y: 635 }],
+            speed: 74, outfitColor: '#364A63', hatType: 'gat', royalEtiquette: 'prostrate', locationZone: '동쪽 큰길·저잣거리 입구',
+            historyTip: '조선 후기에는 신분 제도가 조금씩 흔들리기도 했지만, 법과 관습 속에서는 여전히 양반의 권위가 매우 높았어요.',
+            defaultGreeting: '어디, 무엄하게 구는 자는 없는지 살펴볼까.',
+            higherRankReply: '공손히 절을 올리니 용서하겠노라. 어서 가거라.',
+            lowerRankReply: '반갑네, 이 도령! 오늘 백성들의 표정을 살펴보러 가시는가?'
+          },
+          {
+            id: 'patrol_jungin_1', name: '관아 서리 최 서기', roleTitle: '중인·하급관리', rank: 2, x: 960, y: 355,
+            patrolPoints: [{ x: 960, y: 355 }, { x: 1370, y: 355 }],
+            speed: 62, outfitColor: '#A1742A', hatType: 'jungin_cap', royalEtiquette: 'prostrate', locationZone: '관아 앞길',
+            historyTip: '중인은 양반보다는 아래이지만 상민과 천민보다는 위 신분으로, 관아의 문서 작성이나 통역·회계 같은 실무를 처리했어요.',
+            defaultGreeting: '관아 문서를 빠짐없이 챙겨야 사또께 칭찬을 듣지.',
+            higherRankReply: '예절을 잘 지키니 기특하군.',
+            lowerRankReply: '나리, 관아 길목이 깨끗하게 정돈되어 있습니다!'
+          },
+          {
+            id: 'patrol_cheonmin_1', name: '노비 막동이', roleTitle: '천민', rank: 0, x: 370, y: 635,
+            patrolPoints: [{ x: 370, y: 635 }, { x: 740, y: 635 }],
+            speed: 82, outfitColor: '#8D7158', hatType: 'bandana', royalEtiquette: 'prostrate', locationZone: '남쪽 행차로 가장자리',
+            historyTip: '일반 백성(상민·천민)은 임금의 얼굴(용안)을 직접 쳐다보는 것이 불경죄에 해당해, 어가가 지나가면 하던 일을 멈추고 바닥에 엎드렸어요.',
+            defaultGreeting: '나리들께 부딪히지 않게 조심조심 심부름을 다녀와야지!',
+            higherRankReply: '아이고, 같은 처지라도 서로 도우며 힘내세!',
+            lowerRankReply: '나리, 안녕하십니까! 얼른 길 비켜 드리겠습니다!'
+          },
+          {
+            id: 'royal_jongchin', name: '종친 완풍군', roleTitle: '왕족·종친', rank: 3, x: 470, y: 442,
+            patrolPoints: [{ x: 470, y: 442 }, { x: 725, y: 442 }],
+            speed: 54, outfitColor: '#7A2848', hatType: 'gat', royalEtiquette: 'eup', locationZone: '대동로 북쪽 가장자리',
+            historyTip: '왕과 혈연관계인 왕족과 종친은 일반 신하보다 격식이 완화되어, 어가가 지나갈 때 엎드리지 않고 서서 두 손을 모아 가볍게 읍(揖)으로 예를 표했어요.',
+            defaultGreeting: '종친으로서 도성의 질서와 백성들의 삶을 살피고 있노라.',
+            higherRankReply: '예의가 참 바르구나. 나라의 기강을 잘 지키거라.',
+            lowerRankReply: '이 도령, 반갑소! 선비로서 학문에 더욱 힘쓰시게나.'
+          }
+        ];
+
+        var GWAGEO_QUIZ = [
+          {
+            id: 'q1',
+            question: '조선시대의 4가지 신분 중, 주로 농사를 짓거나 물건을 팔며 나라에 세금(조세)을 내는 의무가 가장 컸던 신분은 무엇일까요?',
+            choices: ['양반', '중인', '상민', '천민'],
+            correctIndex: 2,
+            explanation: '상민은 조선 백성의 대다수를 차지하며 농사·상업·수공업을 통해 세금과 군역의 의무를 담당했습니다.'
+          },
+          {
+            id: 'q2',
+            question: '조선시대 통역관(역관), 의원, 아전 등 전문적인 기술이나 실무를 맡았던 중간 신분은 누구일까요?',
+            choices: ['중인', '양반', '노비', '왕족'],
+            correctIndex: 0,
+            explanation: '중인은 전문 기술을 바탕으로 잡과 시험이나 관청 실무를 맡았지만, 양반이 아니어서 높은 벼슬에 오르기 어려웠습니다.'
+          },
+          {
+            id: 'q3',
+            question: '다음 중 조선시대 신분 질서에 대한 설명으로 바른 것은 무엇일까요?',
+            choices: [
+              '천민도 열심히 공부하면 문과 과거 시험에 응시할 수 있었다.',
+              '임금님의 어가가 지나갈 때 고위 관료(당상관)는 서서 국궁하고, 일반 백성은 바닥에 엎드렸다.',
+              '상민은 비단옷을 입고 큰 기와집에서 사는 것이 일반적이었다.',
+              '신분은 태어날 때 정해지지 않고 매년 시험으로 바뀌었다.'
+            ],
+            correctIndex: 1,
+            explanation: '조선시대는 신분에 따라 입는 옷, 집, 시험 자격이 엄격히 구분되었으며, 왕의 행차 앞에서도 신분과 지위에 맞는 예법이 달랐습니다.'
+          }
+        ];
+
+        var ROLE_COMPARISON_TABLE = [
+          { rankLabel: '양반', jobs: '고위 관리, 선비', rights: '과거(문과·무과) 응시, 세금·군역 면제, 기와집·비단옷', duties: '학문 수양, 백성 다스리기, 왕에 대한 충성' },
+          { rankLabel: '중인', jobs: '역관(통역), 의원, 아전', rights: '전문직 관직 세습, 비교적 넉넉한 생활', duties: '실무·기술 업무 수행, 양반에 대한 예의 준수, 고위직 승진 제한' },
+          { rankLabel: '상민', jobs: '농민, 상인, 수공업자', rights: '법적 자유민(양인), 생업 활동', duties: '세금(조세) 납부, 군역과 부역(노역), 초가집·무명옷 생활' },
+          { rankLabel: '천민', jobs: '노비, 백정, 광대', rights: '인정되는 권리가 매우 적음 (재산 취급)', duties: '주인·관아의 궂은일 도맡음, 신분 세습, 과거 시험 불가' }
+        ];
+
+        // -------------------------------------------------------------------
+        // 2. WEB AUDIO API SOUND ENGINE
+        // -------------------------------------------------------------------
+        var SoundEngine = {
+          ctx: null,
+          muted: false,
+          ensureContext: function () {
+            if (this.muted) return null;
+            if (!this.ctx) {
+              var AudioCtx = window.AudioContext || window.webkitAudioContext;
+              if (!AudioCtx) return null;
+              this.ctx = new AudioCtx();
+            }
+            if (this.ctx.state === 'suspended') {
+              this.ctx.resume().catch(function () {});
+            }
+            return this.ctx;
+          },
+          playTone: function (freq, duration, type, volume, delay, endFreq) {
+            var ctx = this.ensureContext();
+            if (!ctx) return;
+            var now = ctx.currentTime + (delay || 0);
+            var osc = ctx.createOscillator();
+            var gain = ctx.createGain();
+            osc.type = type || 'sine';
+            osc.frequency.setValueAtTime(freq, now);
+            if (endFreq) {
+              osc.frequency.exponentialRampToValueAtTime(endFreq, now + duration);
+            }
+            gain.gain.setValueAtTime(0.001, now);
+            gain.gain.linearRampToValueAtTime(volume || 0.08, now + 0.015);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + duration + 0.02);
+          },
+          playBow: function () {
+            this.playTone(329.63, 0.14, 'triangle', 0.08, 0);
+            this.playTone(440.0, 0.22, 'triangle', 0.07, 0.08);
+          },
+          playInteract: function () {
+            this.playTone(523.25, 0.1, 'sine', 0.07, 0);
+            this.playTone(659.25, 0.14, 'sine', 0.06, 0.06);
+          },
+          playStepComplete: function () {
+            this.playTone(440, 0.12, 'triangle', 0.08, 0);
+            this.playTone(523.25, 0.12, 'triangle', 0.08, 0.09);
+            this.playTone(659.25, 0.24, 'triangle', 0.09, 0.18);
+          },
+          playMissionClear: function () {
+            var notes = [523.25, 587.33, 659.25, 783.99, 1046.5];
+            for (var i = 0; i < notes.length; i++) {
+              this.playTone(notes[i], i === notes.length - 1 ? 0.45 : 0.16, 'triangle', 0.09, i * 0.1);
+            }
+          },
+          playRoyalHorn: function () {
+            this.playTone(196, 0.45, 'sawtooth', 0.06, 0, 220);
+            this.playTone(293.66, 0.55, 'sawtooth', 0.055, 0.35, 293.66);
+          },
+          playPenalty: function () {
+            this.playTone(180, 0.45, 'sawtooth', 0.1, 0, 95);
+            this.playTone(130, 0.55, 'square', 0.06, 0.1, 75);
+          }
+        };
+
+        // -------------------------------------------------------------------
+        // 3. SVG PORTRAITS, STAMPS & UI ICONS
+        // -------------------------------------------------------------------
+        function escapeHtml(str) {
+          return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+        }
+
+        function portraitSvg(roleId, size) {
+          size = size || 82;
+          if (roleId === 'yangban') {
+            return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 96 96" fill="none" aria-label="양반 이도령 초상">' +
+              '<circle cx="48" cy="48" r="44" fill="#E9EFF5" stroke="#1E4D7B" stroke-width="2" />' +
+              '<path d="M22 86 C24 66 34 60 48 60 C62 60 72 66 74 86 Z" fill="#275C8F" />' +
+              '<path d="M39 60 L48 73 L57 60" stroke="#F8F5EC" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />' +
+              '<rect x="43" y="52" width="10" height="10" rx="4" fill="#F2C8A2" />' +
+              '<circle cx="48" cy="42" r="14" fill="#F6D5B4" />' +
+              '<circle cx="43" cy="41" r="1.7" fill="#231F1D" />' +
+              '<circle cx="53" cy="41" r="1.7" fill="#231F1D" />' +
+              '<path d="M44 48 Q48 46 52 48" stroke="#3B312A" stroke-width="1.6" stroke-linecap="round" />' +
+              '<ellipse cx="48" cy="30" rx="26" ry="5.5" fill="#231F1D" />' +
+              '<path d="M39 30 L41 16 Q48 14 55 16 L57 30 Z" fill="#2E2926" />' +
+              '<path d="M39 32 Q48 56 57 32" stroke="#C88A1E" stroke-width="1.4" fill="none" />' +
+              '</svg>';
+          }
+          if (roleId === 'jungin') {
+            return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 96 96" fill="none" aria-label="중인 지석 초상">' +
+              '<circle cx="48" cy="48" r="44" fill="#F6EEDB" stroke="#C88A1E" stroke-width="2" />' +
+              '<path d="M23 86 C25 66 35 60 48 60 C61 60 71 66 73 86 Z" fill="#9A6B26" />' +
+              '<path d="M40 60 L48 72 L56 60" stroke="#FAF6EC" stroke-width="3" stroke-linecap="round" />' +
+              '<rect x="57" y="70" width="9" height="13" rx="2" fill="#E6D2A8" stroke="#5E4318" stroke-width="1.2" />' +
+              '<rect x="43" y="52" width="10" height="10" rx="4" fill="#F2C8A2" />' +
+              '<circle cx="48" cy="42" r="14" fill="#F6D5B4" />' +
+              '<circle cx="43" cy="41" r="1.7" fill="#231F1D" />' +
+              '<circle cx="53" cy="41" r="1.7" fill="#231F1D" />' +
+              '<path d="M45 48 Q48 50 51 48" stroke="#3B312A" stroke-width="1.5" stroke-linecap="round" />' +
+              '<path d="M36 33 L39 19 Q48 16 57 19 L60 33 Z" fill="#322C29" />' +
+              '<rect x="34" y="30" width="28" height="4" rx="2" fill="#231F1D" />' +
+              '<path d="M34 31 L27 29 M62 31 L69 29" stroke="#322C29" stroke-width="2.5" stroke-linecap="round" />' +
+              '</svg>';
+          }
+          if (roleId === 'sangmin') {
+            return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 96 96" fill="none" aria-label="상민 덕배 초상">' +
+              '<circle cx="48" cy="48" r="44" fill="#E7EFE9" stroke="#2F6B48" stroke-width="2" />' +
+              '<path d="M23 86 C25 66 35 60 48 60 C61 60 71 66 73 86 Z" fill="#EAE3D2" />' +
+              '<path d="M31 63 L39 86 M65 63 L57 86" stroke="#4D7A5C" stroke-width="6" stroke-linecap="round" />' +
+              '<path d="M40 60 L48 71 L56 60" stroke="#7A6B58" stroke-width="2.5" stroke-linecap="round" />' +
+              '<rect x="43" y="52" width="10" height="10" rx="4" fill="#E6B98E" />' +
+              '<circle cx="48" cy="42" r="14" fill="#EEC49C" />' +
+              '<circle cx="43" cy="41" r="1.7" fill="#231F1D" />' +
+              '<circle cx="53" cy="41" r="1.7" fill="#231F1D" />' +
+              '<path d="M44 48 Q48 51 52 48" stroke="#4A3628" stroke-width="1.6" stroke-linecap="round" />' +
+              '<path d="M21 34 Q48 14 75 34 Z" fill="#D5B278" stroke="#9E7B44" stroke-width="1.6" />' +
+              '<path d="M38 25 Q48 16 58 25" stroke="#B69054" stroke-width="1.5" fill="none" />' +
+              '</svg>';
+          }
+          return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 96 96" fill="none" aria-label="천민 돌쇠 초상">' +
+            '<circle cx="48" cy="48" r="44" fill="#F2EAE3" stroke="#7C5438" stroke-width="2" />' +
+            '<path d="M24 86 C26 67 36 60 48 60 C60 60 70 67 72 86 Z" fill="#9E7E63" />' +
+            '<path d="M40 60 L48 70 L56 60" stroke="#E7DCCB" stroke-width="2.5" stroke-linecap="round" />' +
+            '<rect x="43" y="52" width="10" height="10" rx="4" fill="#E0B085" />' +
+            '<circle cx="48" cy="43" r="13.5" fill="#E8BA92" />' +
+            '<circle cx="48" cy="24" r="5" fill="#2B2522" />' +
+            '<path d="M34 36 Q48 31 62 36" stroke="#C23B2B" stroke-width="4.5" stroke-linecap="round" />' +
+            '<circle cx="43" cy="42" r="1.7" fill="#231F1D" />' +
+            '<circle cx="53" cy="42" r="1.7" fill="#231F1D" />' +
+            '<path d="M44 49 Q48 51 52 49" stroke="#4A3628" stroke-width="1.5" stroke-linecap="round" />' +
+            '</svg>';
+        }
+
+        function stampSvg(label, size) {
+          size = size || 56;
+          return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 64 64" fill="none" aria-label="' + escapeHtml(label) + ' 도장">' +
+            '<rect x="5" y="5" width="54" height="54" rx="8" fill="#C23B2B" fill-opacity="0.1" stroke="#C23B2B" stroke-width="3.2" />' +
+            '<rect x="10" y="10" width="44" height="44" rx="4" stroke="#C23B2B" stroke-width="1.2" stroke-dasharray="3 2" />' +
+            '<text x="32" y="38" text-anchor="middle" fill="#C23B2B" font-size="18" font-weight="700" font-family="Gowun Batang, Batang, serif">' + escapeHtml(label) + '</text>' +
+            '</svg>';
+        }
+
+        var ICONS = {
+          help: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>',
+          book: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>',
+          award: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>',
+          play: '<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg>',
+          back: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>',
+          map: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>',
+          volOn: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>',
+          volOff: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="22" y1="9" x2="16" y2="15"/><line x1="16" y1="9" x2="22" y2="15"/></svg>',
+          compass: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C88A1E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>',
+          alert: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+          close: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+          reset: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>'
+        };
+
+        // -------------------------------------------------------------------
+        // 4. CANVAS 2D RENDERER
+        // -------------------------------------------------------------------
+        function drawRoundedRect(ctx, x, y, w, h, r) {
+          var radius = Math.min(r, w / 2, h / 2);
+          ctx.beginPath();
+          ctx.moveTo(x + radius, y);
+          ctx.lineTo(x + w - radius, y);
+          ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
+          ctx.lineTo(x + w, y + h - radius);
+          ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
+          ctx.lineTo(x + radius, y + h);
+          ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
+          ctx.lineTo(x, y + radius);
+          ctx.quadraticCurveTo(x, y, x + radius, y);
+          ctx.closePath();
+        }
+
+        function drawTerrain(ctx, timeSec, royal) {
+          ctx.fillStyle = '#D9DFBF';
+          ctx.fillRect(0, 0, MAP_WIDTH, MAP_HEIGHT);
+
+          ctx.fillStyle = '#CFD7B1';
+          for (var gx = 40; gx < MAP_WIDTH; gx += 130) {
+            for (var gy = 40; gy < MAP_HEIGHT; gy += 120) {
+              if ((gx + gy) % 260 === 0) {
+                ctx.beginPath();
+                ctx.ellipse(gx, gy, 42, 22, 0.2, 0, Math.PI * 2);
+                ctx.fill();
+              }
+            }
+          }
+
+          // Rice paddies
+          ctx.fillStyle = '#C7BC7A';
+          drawRoundedRect(ctx, 70, 910, 315, 145, 10);
+          ctx.fill();
+          ctx.strokeStyle = '#9C8D58';
+          ctx.lineWidth = 3;
+          ctx.stroke();
+
+          for (var row = 0; row < 2; row++) {
+            for (var col = 0; col < 3; col++) {
+              var px = 82 + col * 100;
+              var py = 922 + row * 64;
+              ctx.fillStyle = (row + col) % 2 === 0 ? '#AEB964' : '#B9C46F';
+              ctx.fillRect(px, py, 90, 54);
+              ctx.strokeStyle = '#8F824D';
+              ctx.lineWidth = 1.5;
+              ctx.strokeRect(px, py, 90, 54);
+
+              ctx.fillStyle = '#D9AE3B';
+              for (var sx = px + 12; sx < px + 84; sx += 18) {
+                for (var sy = py + 14; sy < py + 48; sy += 16) {
+                  ctx.fillRect(sx, sy, 4, 6);
+                }
+              }
+            }
+          }
+          ctx.fillStyle = '#53452A';
+          ctx.font = 'bold 12px "Noto Sans KR", sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('풍년 논밭', 228, 1074);
+
+          // Village dirt paths
+          ctx.fillStyle = '#E5D3B3';
+          ctx.fillRect(130, 305, 665, 85);
+          ctx.fillRect(855, 310, 560, 80);
+          ctx.fillRect(220, 385, 70, 95);
+          ctx.fillRect(545, 385, 70, 95);
+          ctx.fillRect(210, 595, 75, 290);
+          ctx.fillRect(525, 595, 75, 290);
+          ctx.fillRect(210, 825, 580, 68);
+          ctx.fillRect(905, 385, 70, 520);
+          ctx.fillRect(1160, 385, 75, 95);
+          ctx.fillRect(1030, 595, 310, 80);
+          ctx.fillRect(1030, 815, 320, 80);
+
+          // Royal Avenue
+          ctx.fillStyle = '#DEC499';
+          ctx.fillRect(0, ROYAL_ROAD_Y_MIN, MAP_WIDTH, ROYAL_ROAD_Y_MAX - ROYAL_ROAD_Y_MIN);
+
+          ctx.fillStyle = '#C7B89E';
+          ctx.fillRect(0, ROYAL_ROAD_Y_MIN - 14, MAP_WIDTH, 14);
+          ctx.fillRect(0, ROYAL_ROAD_Y_MAX, MAP_WIDTH, 14);
+          ctx.strokeStyle = '#9D8E75';
+          ctx.lineWidth = 1.5;
+          for (var curbx = 0; curbx < MAP_WIDTH; curbx += 40) {
+            ctx.strokeRect(curbx, ROYAL_ROAD_Y_MIN - 14, 40, 14);
+            ctx.strokeRect(curbx, ROYAL_ROAD_Y_MAX, 40, 14);
+          }
+
+          if (royal.phase !== 'IDLE') {
+            var pulse = 0.16 + 0.1 * Math.sin(timeSec * 8);
+            ctx.fillStyle = 'rgba(194, 59, 43, ' + pulse + ')';
+            ctx.fillRect(0, ROYAL_ROAD_Y_MIN, MAP_WIDTH, ROYAL_ROAD_Y_MAX - ROYAL_ROAD_Y_MIN);
+
+            ctx.save();
+            ctx.fillStyle = 'rgba(150, 28, 18, 0.8)';
+            ctx.font = 'bold 16px "Noto Sans KR", sans-serif';
+            ctx.textAlign = 'center';
+            for (var tx = 220; tx < MAP_WIDTH; tx += 420) {
+              ctx.fillText('▲ 어가 행차로 — 길 밖으로 비켜 예를 갖추세요 ▲', tx, (ROYAL_ROAD_Y_MIN + ROYAL_ROAD_Y_MAX) / 2 + 6);
+            }
+            ctx.restore();
+          } else {
+            ctx.fillStyle = 'rgba(110, 86, 52, 0.55)';
+            ctx.font = 'bold 13px "Noto Sans KR", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('임금님 행차 큰길 (대동로)', 420, ROYAL_ROAD_Y_MIN + 22);
+            ctx.fillText('임금님 행차 큰길 (대동로)', 1220, ROYAL_ROAD_Y_MIN + 22);
+          }
+
+          // Stream
+          ctx.fillStyle = '#6FA8B8';
+          ctx.fillRect(STREAM_X_MIN, 0, STREAM_X_MAX - STREAM_X_MIN, MAP_HEIGHT);
+          ctx.fillStyle = '#B8AD92';
+          ctx.fillRect(STREAM_X_MIN - 6, 0, 6, MAP_HEIGHT);
+          ctx.fillRect(STREAM_X_MAX, 0, 6, MAP_HEIGHT);
+
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
+          ctx.lineWidth = 2;
+          for (var wy = ((timeSec * 28) % 60) - 30; wy < MAP_HEIGHT; wy += 60) {
+            ctx.beginPath();
+            ctx.moveTo(STREAM_X_MIN + 14, wy);
+            ctx.quadraticCurveTo(STREAM_X_MIN + 30, wy + 8, STREAM_X_MIN + 46, wy);
+            ctx.stroke();
+          }
+
+          // Bridges
+          for (var bi = 0; bi < BRIDGES.length; bi++) {
+            var b = BRIDGES[bi];
+            ctx.fillStyle = '#9C7046';
+            ctx.fillRect(b.x, b.y, b.w, b.h);
+            ctx.strokeStyle = '#6B492A';
+            ctx.lineWidth = 2;
+            for (var py = b.y + 8; py < b.y + b.h; py += 14) {
+              ctx.beginPath();
+              ctx.moveTo(b.x, py);
+              ctx.lineTo(b.x + b.w, py);
+              ctx.stroke();
+            }
+            ctx.fillStyle = '#5C3D21';
+            ctx.fillRect(b.x - 2, b.y - 4, b.w + 4, 7);
+            ctx.fillRect(b.x - 2, b.y + b.h - 3, b.w + 4, 7);
+          }
+        }
+
+        function drawStoneWalls(ctx) {
+          for (var i = 0; i < STONE_WALLS.length; i++) {
+            var w = STONE_WALLS[i];
+            ctx.fillStyle = '#B9AE9A';
+            ctx.fillRect(w.x, w.y, w.w, w.h);
+            ctx.strokeStyle = '#7E7463';
+            ctx.lineWidth = 1.5;
+            for (var sx = w.x; sx < w.x + w.w; sx += 18) {
+              ctx.strokeRect(sx, w.y + 4, 18, w.h - 6);
+            }
+            ctx.fillStyle = '#3B424C';
+            ctx.fillRect(w.x - 2, w.y - 4, w.w + 4, 8);
+          }
+        }
+
+        function drawBuilding(ctx, b, timeSec) {
+          ctx.fillStyle = 'rgba(36, 31, 28, 0.14)';
+          drawRoundedRect(ctx, b.x + 8, b.y + 10, b.w, b.h, 8);
+          ctx.fill();
+
+          var wallY = b.y + b.h * 0.56;
+          var wallH = b.h * 0.44;
+
+          if (b.kind === 'gwanna') {
+            ctx.fillStyle = '#F5EFE2';
+            ctx.fillRect(b.x + 10, wallY, b.w - 20, wallH);
+            ctx.fillStyle = '#9E2E24';
+            for (var px = b.x + 18; px <= b.x + b.w - 24; px += 52) {
+              ctx.fillRect(px, wallY, 8, wallH);
+            }
+            ctx.fillStyle = '#5E3A22';
+            ctx.fillRect(b.doorX - 24, wallY + 8, 48, wallH - 8);
+            ctx.fillStyle = '#C23B2B';
+            ctx.beginPath();
+            ctx.arc(b.x + 56, b.y + b.h - 14, 11, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#F2DEC0';
+            ctx.beginPath();
+            ctx.arc(b.x + 56, b.y + b.h - 14, 6, 0, Math.PI * 2);
+            ctx.fill();
+          } else if (b.kind === 'giwa_house' || b.kind === 'seodang') {
+            ctx.fillStyle = '#F4EFE4';
+            ctx.fillRect(b.x + 8, wallY, b.w - 16, wallH);
+            ctx.fillStyle = '#6B482B';
+            ctx.fillRect(b.x + 12, wallY, 7, wallH);
+            ctx.fillRect(b.x + b.w - 19, wallY, 7, wallH);
+            ctx.fillStyle = '#FAF6EB';
+            ctx.fillRect(b.doorX - 28, wallY + 8, 56, wallH - 10);
+            ctx.strokeStyle = '#7D5836';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(b.doorX - 28, wallY + 8, 56, wallH - 10);
+            ctx.beginPath();
+            ctx.moveTo(b.doorX, wallY + 8);
+            ctx.lineTo(b.doorX, wallY + wallH - 2);
+            ctx.stroke();
+          } else if (b.kind === 'choga_house' || b.kind === 'blacksmith') {
+            ctx.fillStyle = '#D9C8AA';
+            ctx.fillRect(b.x + 10, wallY, b.w - 20, wallH);
+            ctx.fillStyle = '#6E4E32';
+            ctx.fillRect(b.doorX - 18, wallY + 10, 36, wallH - 10);
+
+            if (b.kind === 'choga_house') {
+              ctx.fillStyle = '#4A3324';
+              ctx.beginPath();
+              ctx.arc(b.x + b.w - 18, b.y + b.h - 10, 8, 0, Math.PI * 2);
+              ctx.arc(b.x + b.w - 3, b.y + b.h - 12, 6, 0, Math.PI * 2);
+              ctx.fill();
+            } else {
+              var glow = 0.6 + 0.4 * Math.sin(timeSec * 7);
+              ctx.fillStyle = 'rgba(235, 94, 40, ' + glow + ')';
+              ctx.beginPath();
+              ctx.arc(b.x + 34, b.y + b.h - 16, 12, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.fillStyle = '#33363B';
+              ctx.fillRect(b.x + b.w - 38, b.y + b.h - 20, 20, 12);
+            }
+          } else {
+            ctx.fillStyle = '#E8D8BE';
+            ctx.fillRect(b.x + 8, wallY, b.w - 16, wallH);
+            ctx.fillStyle = '#8B5E34';
+            ctx.fillRect(b.x + 18, b.y + b.h - 22, b.w - 36, 18);
+
+            if (b.kind === 'market_silk') {
+              var colors = ['#C23B2B', '#1E4D7B', '#C88A1E', '#3A7D58'];
+              for (var ci = 0; ci < colors.length; ci++) {
+                ctx.fillStyle = colors[ci];
+                ctx.fillRect(b.x + 28 + ci * 28, b.y + b.h - 20, 20, 13);
+              }
+            } else if (b.kind === 'market_herbs') {
+              ctx.fillStyle = '#52794C';
+              ctx.beginPath();
+              ctx.arc(b.x + 48, b.y + b.h - 13, 9, 0, Math.PI * 2);
+              ctx.arc(b.x + 82, b.y + b.h - 13, 9, 0, Math.PI * 2);
+              ctx.arc(b.x + 116, b.y + b.h - 13, 9, 0, Math.PI * 2);
+              ctx.fill();
+            } else {
+              ctx.fillStyle = '#D8C28C';
+              drawRoundedRect(ctx, b.x + 34, b.y + b.h - 22, 26, 16, 5);
+              ctx.fill();
+              drawRoundedRect(ctx, b.x + 70, b.y + b.h - 22, 26, 16, 5);
+              ctx.fill();
+              drawRoundedRect(ctx, b.x + 106, b.y + b.h - 22, 26, 16, 5);
+              ctx.fill();
+            }
+          }
+
+          var roofH = b.h * 0.62;
+          if (b.kind === 'choga_house') {
+            ctx.fillStyle = '#D4B46A';
+            ctx.beginPath();
+            ctx.moveTo(b.x - 8, b.y + roofH);
+            ctx.quadraticCurveTo(b.x + b.w / 2, b.y - 16, b.x + b.w + 8, b.y + roofH);
+            ctx.closePath();
+            ctx.fill();
+            ctx.strokeStyle = '#9E7E3D';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+          } else if (b.kind.indexOf('market_') === 0) {
+            var awningColor = b.kind === 'market_silk' ? '#A8382B' : b.kind === 'market_herbs' ? '#2F6B48' : '#B57B24';
+            ctx.fillStyle = awningColor;
+            ctx.beginPath();
+            ctx.moveTo(b.x - 4, b.y + roofH + 4);
+            ctx.lineTo(b.x + 12, b.y + 8);
+            ctx.lineTo(b.x + b.w - 12, b.y + 8);
+            ctx.lineTo(b.x + b.w + 4, b.y + roofH + 4);
+            ctx.closePath();
+            ctx.fill();
+            ctx.fillStyle = 'rgba(255, 248, 232, 0.25)';
+            for (var sx = b.x + 16; sx < b.x + b.w - 20; sx += 28) {
+              ctx.fillRect(sx, b.y + 10, 12, roofH - 8);
+            }
+          } else {
+            var roofColor = b.kind === 'gwanna' ? '#2A384C' : b.kind === 'blacksmith' ? '#4D453F' : '#353F4B';
+            ctx.fillStyle = roofColor;
+            ctx.beginPath();
+            ctx.moveTo(b.x - 12, b.y + roofH + 4);
+            ctx.quadraticCurveTo(b.x + 14, b.y + 18, b.x + 28, b.y + 8);
+            ctx.lineTo(b.x + b.w - 28, b.y + 8);
+            ctx.quadraticCurveTo(b.x + b.w - 14, b.y + 18, b.x + b.w + 12, b.y + roofH + 4);
+            ctx.quadraticCurveTo(b.x + b.w / 2, b.y + roofH - 6, b.x - 12, b.y + roofH + 4);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.strokeStyle = '#D5D8DC';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(b.x + 26, b.y + 9);
+            ctx.lineTo(b.x + b.w - 26, b.y + 9);
+            ctx.stroke();
+
+            ctx.strokeStyle = 'rgba(255,255,255,0.14)';
+            ctx.lineWidth = 1.5;
+            for (var rx = b.x + 16; rx < b.x + b.w - 14; rx += 16) {
+              ctx.beginPath();
+              ctx.moveTo(rx, b.y + 12);
+              ctx.lineTo(rx, b.y + roofH);
+              ctx.stroke();
+            }
+          }
+
+          var labelW = Math.max(96, b.name.length * 14 + 24);
+          var labelX = b.x + b.w / 2 - labelW / 2;
+          var labelY = b.y + 22;
+          ctx.fillStyle = 'rgba(252, 248, 238, 0.94)';
+          drawRoundedRect(ctx, labelX, labelY, labelW, 24, 5);
+          ctx.fill();
+          ctx.strokeStyle = '#6B563E';
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+
+          ctx.fillStyle = '#231F1D';
+          ctx.font = 'bold 12px "Noto Sans KR", sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(b.name, b.x + b.w / 2, labelY + 16);
+        }
+
+        function drawTree(ctx, t) {
+          ctx.fillStyle = 'rgba(36, 31, 28, 0.14)';
+          ctx.beginPath();
+          ctx.ellipse(t.x + 4, t.y + 14, t.radius * 0.9, t.radius * 0.45, 0, 0, Math.PI * 2);
+          ctx.fill();
+
+          if (t.kind === 'pine') {
+            ctx.fillStyle = '#6E4C2E';
+            ctx.fillRect(t.x - 4, t.y - 4, 8, 18);
+            ctx.fillStyle = '#2B5B3B';
+            ctx.beginPath();
+            ctx.arc(t.x, t.y - 14, t.radius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#38704A';
+            ctx.beginPath();
+            ctx.arc(t.x - 6, t.y - 18, t.radius * 0.65, 0, Math.PI * 2);
+            ctx.fill();
+          } else if (t.kind === 'plum') {
+            ctx.fillStyle = '#5D4029';
+            ctx.fillRect(t.x - 3.5, t.y - 4, 7, 16);
+            ctx.fillStyle = '#F2C6CE';
+            ctx.beginPath();
+            ctx.arc(t.x, t.y - 14, t.radius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#FBE4E8';
+            ctx.beginPath();
+            ctx.arc(t.x + 5, t.y - 18, t.radius * 0.6, 0, Math.PI * 2);
+            ctx.fill();
+          } else {
+            ctx.strokeStyle = '#3E7A48';
+            ctx.lineWidth = 5;
+            var offsets = [-8, 0, 8];
+            for (var i = 0; i < offsets.length; i++) {
+              ctx.beginPath();
+              ctx.moveTo(t.x + offsets[i], t.y + 10);
+              ctx.lineTo(t.x + offsets[i] + (i - 1) * 3, t.y - 28);
+              ctx.stroke();
+            }
+            ctx.fillStyle = '#569A5E';
+            ctx.beginPath();
+            ctx.arc(t.x, t.y - 26, 15, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+
+        function drawCharacterSprite(ctx, opts) {
+          var isProstrating = opts.royalPosture === 'prostrate';
+          var isGukgung = opts.royalPosture === 'gukgung';
+          var isEup = opts.royalPosture === 'eup';
+
+          ctx.save();
+          ctx.translate(opts.x, opts.y);
+
+          ctx.fillStyle = opts.isPlayer ? 'rgba(30, 77, 123, 0.24)' : 'rgba(36, 31, 28, 0.18)';
+          ctx.beginPath();
+          ctx.ellipse(0, 14, isProstrating ? 19 : 13, isProstrating ? 7 : 6, 0, 0, Math.PI * 2);
+          ctx.fill();
+
+          if (opts.isPlayer) {
+            ctx.strokeStyle = '#1E4D7B';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.ellipse(0, 14, 16, 8, 0, 0, Math.PI * 2);
+            ctx.stroke();
+          }
+
+          var legSwing = opts.isMoving ? Math.sin(opts.walkPhase * 12) * 3.5 : 0;
+
+          if (isGukgung || isEup) {
+            ctx.fillStyle = '#3B322C';
+            ctx.fillRect(-6, 6, 4.5, 8);
+            ctx.fillRect(1.5, 6, 4.5, 8);
+          }
+
+          ctx.save();
+          if (isProstrating) {
+            ctx.translate(0, 9);
+            ctx.scale(1.06, 0.5);
+          } else if (isGukgung) {
+            ctx.translate(0, 4);
+            ctx.rotate(0.46);
+          } else if (isEup) {
+            ctx.translate(0, 1);
+            ctx.rotate(0.11);
+          } else if (opts.isBowing) {
+            ctx.translate(0, 3);
+            ctx.rotate(0.24);
+          }
+
+          if (!isGukgung && !isEup) {
+            ctx.fillStyle = '#3B322C';
+            ctx.fillRect(-6, 6 + legSwing, 4.5, 8);
+            ctx.fillRect(1.5, 6 - legSwing, 4.5, 8);
+          }
+
+          ctx.fillStyle = opts.outfitColor;
+          drawRoundedRect(ctx, -10, -8, 20, 17, 5);
+          ctx.fill();
+          ctx.strokeStyle = '#FAF6EB';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(-4, -8);
+          ctx.lineTo(0, -1);
+          ctx.lineTo(4, -8);
+          ctx.stroke();
+
+          if (isGukgung || isEup) {
+            ctx.fillStyle = '#F5CEA8';
+            ctx.beginPath();
+            ctx.arc(isGukgung ? 7 : 4, isGukgung ? 4 : -1, 3.5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = opts.outfitColor;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(-6, -2);
+            ctx.lineTo(isGukgung ? 6 : 3, isGukgung ? 4 : -1);
+            ctx.moveTo(6, -2);
+            ctx.lineTo(isGukgung ? 8 : 5, isGukgung ? 4 : -1);
+            ctx.stroke();
+          } else if (isProstrating) {
+            ctx.fillStyle = '#F5CEA8';
+            ctx.beginPath();
+            ctx.arc(-5, 9, 2.8, 0, Math.PI * 2);
+            ctx.arc(5, 9, 2.8, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          ctx.fillStyle = '#F5CEA8';
+          ctx.beginPath();
+          ctx.arc(0, -15, 9, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = '#231F1D';
+          var eyeY = opts.isBowing || isProstrating || isGukgung ? -12.5 : -14.5;
+          ctx.beginPath();
+          ctx.arc(-3, eyeY, 1.3, 0, Math.PI * 2);
+          ctx.arc(3, eyeY, 1.3, 0, Math.PI * 2);
+          ctx.fill();
+
+          if (opts.hatType === 'gat') {
+            ctx.fillStyle = '#211D1B';
+            ctx.beginPath();
+            ctx.ellipse(0, -21, 16, 4.2, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillRect(-5.5, -31, 11, 10);
+          } else if (opts.hatType === 'jungin_cap') {
+            ctx.fillStyle = '#2B2624';
+            ctx.fillRect(-8, -24, 16, 4);
+            ctx.fillRect(-6, -30, 12, 8);
+            ctx.fillRect(-13, -23, 5, 2.5);
+            ctx.fillRect(8, -23, 5, 2.5);
+          } else if (opts.hatType === 'paeraengi') {
+            ctx.fillStyle = '#D5B278';
+            ctx.beginPath();
+            ctx.moveTo(-15, -19);
+            ctx.quadraticCurveTo(0, -33, 15, -19);
+            ctx.closePath();
+            ctx.fill();
+            ctx.strokeStyle = '#9E7B44';
+            ctx.lineWidth = 1.3;
+            ctx.stroke();
+          } else if (opts.hatType === 'binyeo') {
+            ctx.fillStyle = '#231F1D';
+            ctx.beginPath();
+            ctx.arc(0, -20, 9.5, Math.PI, 0);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(0, -25, 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#C88A1E';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(-8, -25);
+            ctx.lineTo(8, -25);
+            ctx.stroke();
+          } else {
+            ctx.fillStyle = '#2B2522';
+            ctx.beginPath();
+            ctx.arc(0, -26, 3.5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#C23B2B';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(-8.5, -19);
+            ctx.lineTo(8.5, -19);
+            ctx.stroke();
+          }
+
+          if (opts.carryingItem) {
+            ctx.fillStyle = opts.carryingItem.indexOf('쌀') !== -1 ? '#DFC793' : '#C23B2B';
+            drawRoundedRect(ctx, 10, -8, 12, 13, 3);
+            ctx.fill();
+            ctx.strokeStyle = '#5C4426';
+            ctx.lineWidth = 1.2;
+            ctx.stroke();
+          }
+
+          ctx.restore();
+
+          var tagText = opts.subLabel ? opts.nameLabel + ' (' + opts.subLabel + ')' : opts.nameLabel;
+          ctx.font = 'bold 11px "Noto Sans KR", sans-serif';
+          var tw = ctx.measureText(tagText).width + 12;
+          ctx.fillStyle = opts.isPlayer ? 'rgba(30, 77, 123, 0.92)' : 'rgba(252, 248, 238, 0.9)';
+          drawRoundedRect(ctx, -tw / 2, 18, tw, 18, 4);
+          ctx.fill();
+          ctx.fillStyle = opts.isPlayer ? '#FFFFFF' : '#231F1D';
+          ctx.textAlign = 'center';
+          ctx.fillText(tagText, 0, 31);
+
+          if (opts.royalPosture) {
+            var postureLabel = opts.royalPosture === 'prostrate' ? '엎드려 절' : opts.royalPosture === 'gukgung' ? '국궁(鞠躬)' : '읍(揖)';
+            var badgeColor = opts.royalPosture === 'prostrate' ? '#7C5438' : opts.royalPosture === 'gukgung' ? '#1E4D7B' : '#7A2848';
+            ctx.font = 'bold 10px "Noto Sans KR", sans-serif';
+            var pw = ctx.measureText(postureLabel).width + 10;
+            var badgeY = isProstrating ? -28 : -44;
+            ctx.fillStyle = badgeColor;
+            drawRoundedRect(ctx, -pw / 2, badgeY, pw, 15, 4);
+            ctx.fill();
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillText(postureLabel, 0, badgeY + 11);
+          }
+
+          ctx.restore();
+        }
+
+        function drawSpeechBubble(ctx, x, y, text, variant) {
+          ctx.save();
+          ctx.font = 'bold 12px "Noto Sans KR", sans-serif';
+          var paddingX = 10;
+          var maxW = 190;
+          var words = text.split(' ');
+          var lines = [];
+          var line = '';
+          for (var i = 0; i < words.length; i++) {
+            var test = line ? line + ' ' + words[i] : words[i];
+            if (ctx.measureText(test).width > maxW) {
+              if (line) lines.push(line);
+              line = words[i];
+            } else {
+              line = test;
+            }
+          }
+          if (line) lines.push(line);
+
+          var maxLineW = 0;
+          for (var j = 0; j < lines.length; j++) {
+            maxLineW = Math.max(maxLineW, ctx.measureText(lines[j]).width);
+          }
+          var boxW = Math.min(maxW, maxLineW) + paddingX * 2;
+          var boxH = lines.length * 16 + 12;
+          var bx = x - boxW / 2;
+          var by = y - 44 - boxH;
+
+          ctx.fillStyle = variant === 'warning' ? '#C23B2B' : variant === 'player' ? '#1E4D7B' : 'rgba(252, 249, 242, 0.96)';
+          drawRoundedRect(ctx, bx, by, boxW, boxH, 7);
+          ctx.fill();
+          ctx.strokeStyle = variant === 'normal' ? '#8A7963' : '#FFFFFF';
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+
+          ctx.fillStyle = variant === 'normal' ? '#231F1D' : '#FFFFFF';
+          ctx.textAlign = 'center';
+          for (var k = 0; k < lines.length; k++) {
+            ctx.fillText(lines[k], x, by + 18 + k * 16);
+          }
+          ctx.restore();
+        }
+
+        function drawRoyalProcession(ctx, royal, timeSec) {
+          if (royal.phase !== 'PASSING') return;
+          var cx = royal.x;
+          var cy = royal.y;
+
+          var guardOffsets = [-165, -120, 120, 165];
+          for (var i = 0; i < guardOffsets.length; i++) {
+            var gx = cx + guardOffsets[i];
+            var gy = cy + (i % 2 === 0 ? -24 : 24);
+            ctx.fillStyle = 'rgba(0,0,0,0.2)';
+            ctx.beginPath();
+            ctx.ellipse(gx, gy + 13, 12, 5, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = '#B82E24';
+            drawRoundedRect(ctx, gx - 9, gy - 8, 18, 16, 4);
+            ctx.fill();
+            ctx.fillStyle = '#F2C8A2';
+            ctx.beginPath();
+            ctx.arc(gx, gy - 14, 7.5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#2B2624';
+            ctx.beginPath();
+            ctx.ellipse(gx, gy - 20, 12, 4, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.strokeStyle = '#5C3A21';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.moveTo(gx + 8, gy + 8);
+            ctx.lineTo(gx + 8, gy - 42);
+            ctx.stroke();
+
+            ctx.fillStyle = i < 2 ? '#C88A1E' : '#1E4D7B';
+            ctx.fillRect(gx + 9, gy - 42, 16, 11);
+          }
+
+          var bob = Math.sin(timeSec * 8) * 1.8;
+          ctx.fillStyle = '#6B4423';
+          ctx.fillRect(cx - 72, cy - 2 + bob, 144, 5);
+          ctx.fillRect(cx - 72, cy + 12 + bob, 144, 5);
+
+          ctx.fillStyle = '#C23B2B';
+          drawRoundedRect(ctx, cx - 34, cy - 28 + bob, 68, 44, 6);
+          ctx.fill();
+          ctx.strokeStyle = '#EAB308';
+          ctx.lineWidth = 3;
+          ctx.stroke();
+
+          ctx.fillStyle = '#D99B26';
+          ctx.beginPath();
+          ctx.moveTo(cx - 42, cy - 26 + bob);
+          ctx.lineTo(cx, cy - 48 + bob);
+          ctx.lineTo(cx + 42, cy - 26 + bob);
+          ctx.closePath();
+          ctx.fill();
+          ctx.strokeStyle = '#7A4F0B';
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+
+          ctx.fillStyle = '#FFF9E6';
+          ctx.font = 'bold 12px "Gowun Batang", serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('임금님 어가', cx, cy - 2 + bob);
+
+          var parasols = [-52, 52];
+          for (var pi = 0; pi < parasols.length; pi++) {
+            ctx.fillStyle = '#C88A1E';
+            ctx.beginPath();
+            ctx.arc(cx + parasols[pi], cy - 28 + bob, 14, Math.PI, 0);
+            ctx.fill();
+          }
+        }
+
+        function renderJoseonWorld(ctx, data) {
+          var player = data.player;
+          var npcs = data.npcs;
+          var royal = data.royal;
+          var targetNpcId = data.targetNpcId;
+          var timeSec = data.timeSec;
+          var cameraX = data.cameraX;
+          var cameraY = data.cameraY;
+
+          ctx.save();
+          ctx.clearRect(0, 0, VIEW_W, VIEW_H);
+          ctx.translate(-cameraX, -cameraY);
+
+          drawTerrain(ctx, timeSec, royal);
+          drawStoneWalls(ctx);
+
+          var drawables = [];
+          for (var bi = 0; bi < BUILDINGS.length; bi++) {
+            (function (b) {
+              drawables.push({
+                y: b.y + b.h,
+                draw: function () { drawBuilding(ctx, b, timeSec); }
+              });
+            })(BUILDINGS[bi]);
+          }
+
+          for (var ti = 0; ti < TREES.length; ti++) {
+            (function (t) {
+              drawables.push({
+                y: t.y + 10,
+                draw: function () { drawTree(ctx, t); }
+              });
+            })(TREES[ti]);
+          }
+
+          for (var ni = 0; ni < npcs.length; ni++) {
+            (function (npc) {
+              drawables.push({
+                y: npc.currentY,
+                draw: function () {
+                  var isQuestTarget = npc.id === targetNpcId;
+                  if (isQuestTarget) {
+                    var ringR = 22 + Math.sin(timeSec * 5) * 4;
+                    ctx.strokeStyle = '#C88A1E';
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    ctx.ellipse(npc.currentX, npc.currentY + 12, ringR, ringR * 0.55, 0, 0, Math.PI * 2);
+                    ctx.stroke();
+                  }
+
+                  var requiresBow = mustBowToNpc(player.role.rank, npc.rank) && npc.greetedTimer <= 0;
+                  if (requiresBow && npc.approachWarningTimer > 0) {
+                    var progress = Math.min(1, npc.approachWarningTimer / 2.2);
+                    ctx.strokeStyle = progress > 0.6 ? '#C23B2B' : '#D97706';
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    ctx.arc(npc.currentX, npc.currentY + 10, 26, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * progress);
+                    ctx.stroke();
+                  }
+
+                  var moving = Math.hypot(npc.vx, npc.vy) > 4;
+                  drawCharacterSprite(ctx, {
+                    x: npc.currentX,
+                    y: npc.currentY,
+                    outfitColor: npc.outfitColor,
+                    hatType: npc.hatType,
+                    walkPhase: timeSec,
+                    isMoving: moving,
+                    isBowing: npc.isBowingToPlayer,
+                    royalPosture: npc.royalPosture,
+                    nameLabel: npc.name,
+                    subLabel: npc.roleTitle
+                  });
+
+                  if (isQuestTarget) {
+                    var bounce = Math.sin(timeSec * 6) * 3;
+                    ctx.fillStyle = '#C88A1E';
+                    ctx.beginPath();
+                    ctx.moveTo(npc.currentX, npc.currentY - 36 + bounce);
+                    ctx.lineTo(npc.currentX - 7, npc.currentY - 47 + bounce);
+                    ctx.lineTo(npc.currentX + 7, npc.currentY - 47 + bounce);
+                    ctx.closePath();
+                    ctx.fill();
+                  }
+
+                  if (npc.bubbleText && npc.bubbleTimer > 0) {
+                    drawSpeechBubble(ctx, npc.currentX, npc.currentY, npc.bubbleText, npc.approachWarningTimer > 0 ? 'warning' : 'normal');
+                  }
+                }
+              });
+            })(npcs[ni]);
+          }
+
+          drawables.push({
+            y: player.y,
+            draw: function () {
+              var moving = Math.hypot(player.vx, player.vy) > 4;
+              var royalPosture = player.isBowing && royal.phase !== 'IDLE' ? 'prostrate' : null;
+              var hatMap = { yangban: 'gat', jungin: 'jungin_cap', sangmin: 'paeraengi', cheonmin: 'bandana' };
+              drawCharacterSprite(ctx, {
+                x: player.x,
+                y: player.y,
+                outfitColor: player.role.accentHex,
+                hatType: hatMap[player.role.id],
+                walkPhase: player.walkTime,
+                isMoving: moving,
+                isBowing: player.isBowing,
+                royalPosture: royalPosture,
+                nameLabel: player.role.characterName,
+                isPlayer: true,
+                carryingItem: player.carryingItem
+              });
+              if (player.bubbleText) {
+                drawSpeechBubble(ctx, player.x, player.y, player.bubbleText, 'player');
+              }
+            }
+          });
+
+          drawables.sort(function (a, b) { return a.y - b.y; });
+          for (var di = 0; di < drawables.length; di++) {
+            drawables[di].draw();
+          }
+
+          drawRoyalProcession(ctx, royal, timeSec);
+
+          if (player.rudeFlashTimer > 0) {
+            ctx.strokeStyle = 'rgba(194, 59, 43, 0.85)';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.arc(player.x, player.y, 44 * (1 - player.rudeFlashTimer * 2 + 0.5), 0, Math.PI * 2);
+            ctx.stroke();
+          }
+
+          ctx.restore();
+
+          if (targetNpcId) {
+            var target = null;
+            for (var k = 0; k < npcs.length; k++) {
+              if (npcs[k].id === targetNpcId) { target = npcs[k]; break; }
+            }
+            if (target) {
+              var screenX = target.currentX - cameraX;
+              var screenY = target.currentY - cameraY;
+              if (screenX < 20 || screenX > VIEW_W - 20 || screenY < 20 || screenY > VIEW_H - 20) {
+                var angle = Math.atan2(screenY - VIEW_H / 2, screenX - VIEW_W / 2);
+                var edgeX = Math.max(42, Math.min(VIEW_W - 42, VIEW_W / 2 + Math.cos(angle) * (VIEW_W * 0.44)));
+                var edgeY = Math.max(42, Math.min(VIEW_H - 42, VIEW_H / 2 + Math.sin(angle) * (VIEW_H * 0.42)));
+
+                ctx.save();
+                ctx.translate(edgeX, edgeY);
+                ctx.fillStyle = 'rgba(200, 138, 30, 0.95)';
+                ctx.strokeStyle = '#FFFFFF';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(0, 0, 16, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+                ctx.rotate(angle);
+                ctx.fillStyle = '#FFFFFF';
+                ctx.beginPath();
+                ctx.moveTo(8, 0);
+                ctx.lineTo(-5, -6);
+                ctx.lineTo(-5, 6);
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+              }
+            }
+          }
+        }
+
+        // -------------------------------------------------------------------
+        // 5. APPLICATION STATE & COLLISION
+        // -------------------------------------------------------------------
+        function loadClearedRoles() {
+          try {
+            var raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw) return [];
+            var parsed = JSON.parse(raw);
+            if (Array.isArray(parsed)) {
+              return parsed.filter(function (id) {
+                return ROLES.some(function (r) { return r.id === id; });
+              });
+            }
+          } catch (e) {}
+          return [];
+        }
+
+        function saveClearedRoles(list) {
+          try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+          } catch (e) {}
+        }
+
+        var appState = {
+          clearedRoles: loadClearedRoles(),
+          activeRole: null,
+          showGuide: false,
+          showTable: false,
+          showMasterEnding: false,
+          game: null
+        };
+
+        function createInitialNpcs() {
+          return NPCS.map(function (n) {
+            return Object.assign({}, n, {
+              currentX: n.x,
+              currentY: n.y,
+              vx: 0,
+              vy: 0,
+              facing: 'down',
+              patrolIndex: 0,
+              greetedTimer: 0,
+              approachWarningTimer: 0,
+              isBowingToPlayer: false,
+              royalPosture: null,
+              royalBubbleShown: false,
+              bubbleText: null,
+              bubbleTimer: 0
+            });
+          });
+        }
+
+        function isColliding(x, y, radius) {
+          if (x < radius + 12 || x > MAP_WIDTH - radius - 12 || y < radius + 12 || y > MAP_HEIGHT - radius - 12) {
+            return true;
+          }
+          if (x + radius > STREAM_X_MIN && x - radius < STREAM_X_MAX) {
+            var onBridge = BRIDGES.some(function (b) {
+              return y >= b.y + 4 && y <= b.y + b.h - 4;
+            });
+            if (!onBridge) return true;
+          }
+          for (var i = 0; i < BUILDINGS.length; i++) {
+            var b = BUILDINGS[i];
+            if (x + radius > b.x + 8 && x - radius < b.x + b.w - 8 && y + radius > b.y + 22 && y - radius < b.y + b.h) {
+              return true;
+            }
+          }
+          for (var j = 0; j < STONE_WALLS.length; j++) {
+            var w = STONE_WALLS[j];
+            if (x + radius > w.x && x - radius < w.x + w.w && y + radius > w.y && y - radius < w.y + w.h) {
+              return true;
+            }
+          }
+          for (var k = 0; k < TREES.length; k++) {
+            var t = TREES[k];
+            if (Math.hypot(x - t.x, y - (t.y + 4)) < radius + t.radius * 0.42) {
+              return true;
+            }
+          }
+          return false;
+        }
+
+        // -------------------------------------------------------------------
+        // 6. MENU & SHARED MODALS RENDERING
+        // -------------------------------------------------------------------
+        var rootEl = document.getElementById('app');
+        var animFrameId = null;
+
+        function stopGameLoop() {
+          if (animFrameId !== null) {
+            cancelAnimationFrame(animFrameId);
+            animFrameId = null;
+          }
+        }
+
+        function renderComparisonTableHtml() {
+          var rowsHtml = ROLE_COMPARISON_TABLE.map(function (row) {
+            return '<tr>' +
+              '<td style="font-weight:700;color:#1E4D7B;white-space:nowrap;">' + escapeHtml(row.rankLabel) + '</td>' +
+              '<td style="white-space:nowrap;color:#241F1C;">' + escapeHtml(row.jobs) + '</td>' +
+              '<td>' + escapeHtml(row.rights) + '</td>' +
+              '<td>' + escapeHtml(row.duties) + '</td>' +
+              '</tr>';
+          }).join('');
+          return '<div class="comparison-table-wrap"><table class="comparison-table"><thead><tr>' +
+            '<th>신분</th><th>주요 직업</th><th>권리와 생활</th><th>의무와 제약</th>' +
+            '</tr></thead><tbody>' + rowsHtml + '</tbody></table></div>';
+        }
+
+        function renderMenuScreen() {
+          stopGameLoop();
+          var allCleared = appState.clearedRoles.length === ROLES.length;
+
+          var cardsHtml = ROLES.map(function (role) {
+            var isCleared = appState.clearedRoles.indexOf(role.id) !== -1;
+            var stars = '★'.repeat(role.stars) + '☆'.repeat(4 - role.stars);
+            return '<article class="hanji-card role-card">' +
+              (isCleared ? '<div class="stamp-corner" aria-label="임무 완료">' + stampSvg('완료', 56) + '</div>' : '') +
+              '<div>' +
+                '<div class="role-meta-line">' +
+                  '<span style="color:' + role.accentHex + ';font-weight:700;">' + escapeHtml(role.rankLabel) + '</span>' +
+                  '<span aria-hidden="true">·</span>' +
+                  '<span class="tabular-nums">난이도 ' + stars + ' (' + escapeHtml(role.difficultyText) + ')</span>' +
+                  '<span aria-hidden="true">·</span>' +
+                  '<span>' + role.steps.length + '단계 임무</span>' +
+                '</div>' +
+                '<div class="role-header-row">' +
+                  '<div style="flex-shrink:0;">' + portraitSvg(role.id, 82) + '</div>' +
+                  '<div style="min-width:0;flex:1;">' +
+                    '<h2 class="role-name">' + escapeHtml(role.characterName) + '</h2>' +
+                    '<p class="role-sub">' + escapeHtml(role.title) + '</p>' +
+                  '</div>' +
+                '</div>' +
+                '<dl class="role-details">' +
+                  '<div class="role-detail-row"><dt>복장</dt><dd>' + escapeHtml(role.clothesDesc) + '</dd></div>' +
+                  '<div class="role-detail-row"><dt>역할</dt><dd>' + escapeHtml(role.roleDesc) + '</dd></div>' +
+                  '<div class="role-detail-row"><dt>미션</dt><dd style="color:#241F1C;font-weight:600;">' + escapeHtml(role.missionTitle) + '</dd></div>' +
+                '</dl>' +
+              '</div>' +
+              '<div class="role-card-footer">' +
+                '<span class="role-status-text">' + (isCleared ? '체험 완료 · 다시 도전할 수 있어요' : '아직 체험하지 않은 신분') + '</span>' +
+                '<button class="btn-primary" data-select-role="' + role.id + '" style="background-color:' + role.accentHex + ';">' +
+                  ICONS.play + ' ' + (isCleared ? '다시 체험하기' : '체험 시작하기') +
+                '</button>' +
+              '</div>' +
+            '</article>';
+          }).join('');
+
+          var rightHeaderAction = allCleared
+            ? '<button id="btn-open-master" class="btn-primary" style="background-color:#C23B2B;">' + ICONS.award + ' 마스터 임명장</button>'
+            : '<span class="tabular-nums" style="font-size:14px;font-weight:500;color:#594F46;white-space:nowrap;">완료 ' + appState.clearedRoles.length + ' / ' + ROLES.length + '</span>';
+
+          var modalHtml = '';
+          if (appState.showGuide) {
+            modalHtml = '<div class="modal-backdrop" role="dialog" aria-modal="true">' +
+              '<div class="hanji-card modal-card">' +
+                '<button class="modal-close" id="btn-close-guide" aria-label="닫기">' + ICONS.close + '</button>' +
+                '<h2 class="font-serif-kr" style="font-size:21px;font-weight:700;margin-bottom:14px;">조선 신분 체험기 게임 방법</h2>' +
+                '<ul style="padding-left:18px;display:flex;flex-direction:column;gap:10px;font-size:14px;color:#3D352E;line-height:1.6;">' +
+                  '<li><strong style="color:#1E4D7B;">이동과 대화:</strong> 방향키(또는 WASD)나 왼쪽 조이스틱으로 이동하고, NPC 가까이에서 <strong>Space / Enter</strong>(또는 대화 버튼)를 누르세요.</li>' +
+                  '<li><strong style="color:#C88A1E;">윗 신분께 예절 지키기:</strong> 상민과 천민은 길에서 <strong>양반과 중인</strong>을 만나면 경고 원이 나타납니다. <strong>Q / Shift</strong>(또는 예절 버튼)를 눌러 인사하세요! (천민은 상민에게 인사할 필요가 없어요.)</li>' +
+                  '<li><strong style="color:#C23B2B;">임금님의 어가 행차:</strong> 나팔 소리와 함께 경고가 뜨면 모든 신분이 큰길(대동로) 밖으로 비켜 <strong>예절(엎드려 절하기)</strong>을 유지해야 합니다. 이때 고위 관료는 국궁, 종친은 읍을 하는 모습도 관찰해 보세요!</li>' +
+                  '<li><strong style="color:#2F6B48;">역사 노트:</strong> 마을 사람들과 대화하면 당시 의식주와 신분 제도에 관한 이야기가 기록됩니다.</li>' +
+                '</ul>' +
+                '<div style="margin-top:20px;text-align:right;"><button id="btn-ok-guide" class="btn-primary">알겠습니다</button></div>' +
+              '</div></div>';
+          } else if (appState.showTable) {
+            modalHtml = '<div class="modal-backdrop" role="dialog" aria-modal="true">' +
+              '<div class="hanji-card modal-card wide">' +
+                '<button class="modal-close" id="btn-close-table" aria-label="닫기">' + ICONS.close + '</button>' +
+                '<h2 class="font-serif-kr" style="font-size:21px;font-weight:700;margin-bottom:14px;">조선시대 신분 질서 한눈에 보기</h2>' +
+                renderComparisonTableHtml() +
+                '<div style="margin-top:18px;text-align:right;"><button id="btn-ok-table" class="btn-primary">닫기</button></div>' +
+              '</div></div>';
+          } else if (appState.showMasterEnding) {
+            modalHtml = '<div class="modal-backdrop" role="dialog" aria-modal="true">' +
+              '<div class="hanji-card modal-card wide">' +
+                '<button class="modal-close" id="btn-close-master" aria-label="닫기">' + ICONS.close + '</button>' +
+                '<div class="modal-header">' +
+                  '<div>' +
+                    '<p style="font-size:13px;font-weight:600;color:#C23B2B;">4가지 신분 체험 모두 완료</p>' +
+                    '<h2 class="font-serif-kr" style="font-size:26px;font-weight:700;margin-top:4px;">조선시대 신분 탐험 마스터</h2>' +
+                  '</div>' +
+                  stampSvg('어사', 58) +
+                '</div>' +
+                '<div class="info-box" style="margin-top:16px;display:flex;align-items:flex-start;gap:10px;">' +
+                  '<span style="color:#C88A1E;flex-shrink:0;margin-top:2px;">' + ICONS.award + '</span>' +
+                  '<p>양반·중인·상민·천민의 하루를 모두 체험해 보았어요! 조선시대는 태어난 신분에 따라 살아가는 모습, 입는 옷과 집, 맡은 일과 지켜야 할 예절이 엄격히 달랐다는 사실을 확인했나요?</p>' +
+                '</div>' +
+                '<h3 class="font-serif-kr" style="font-size:17px;font-weight:700;margin:18px 0 10px;">한눈에 정리하는 조선시대 4신분 비교</h3>' +
+                renderComparisonTableHtml() +
+                '<div style="margin-top:20px;padding-top:14px;border-top:1px solid #D7CAB2;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;">' +
+                  '<button id="btn-reset-all" class="btn-secondary">' + ICONS.reset + ' 체험 기록 초기화</button>' +
+                  '<button id="btn-done-master" class="btn-primary">신분 도감으로 돌아가기</button>' +
+                '</div>' +
+              '</div></div>';
+          }
+
+          rootEl.innerHTML =
+            '<div class="hanji-surface">' +
+              '<header class="topbar"><div class="topbar-inner">' +
+                '<div class="brand-title">조선 신분 체험기</div>' +
+                '<nav class="nav-links">' +
+                  '<button class="nav-link-btn" id="btn-open-guide">' + ICONS.help + ' 게임 방법</button>' +
+                  '<button class="nav-link-btn" id="btn-open-table">' + ICONS.book + ' 신분 비교표</button>' +
+                '</nav>' +
+                '<div>' + rightHeaderAction + '</div>' +
+              '</div></header>' +
+              '<main class="menu-main">' +
+                '<section class="hero-strip">' +
+                  '<div>' +
+                    '<p class="hero-kicker">초등학교 5학년 사회 · 조선시대의 신분 질서와 생활 모습</p>' +
+                    '<h1 class="hero-title">신분을 골라 한양 아랫마을의 하루를 살아 보세요</h1>' +
+                    '<p class="hero-desc">양반·중인·상민·천민 중 한 사람이 되어 마을을 걸어 다니며 미션을 해결해요. 나보다 높은 신분을 만나거나 임금님의 어가가 지나갈 때는 예절을 지켜야 합니다.</p>' +
+                  '</div>' +
+                  '<div class="hero-controls-note"><span>조작 방법 안내</span><strong>이동 WASD / 방향키 · 대화 Space · 예절 Q / Shift</strong></div>' +
+                '</section>' +
+                '<section class="role-grid" aria-label="조선시대 4가지 신분 선택">' + cardsHtml + '</section>' +
+              '</main>' +
+            '</div>' + modalHtml;
+
+          // Bind events
+          document.getElementById('btn-open-guide').onclick = function () { appState.showGuide = true; renderMenuScreen(); };
+          document.getElementById('btn-open-table').onclick = function () { appState.showTable = true; renderMenuScreen(); };
+          var masterBtn = document.getElementById('btn-open-master');
+          if (masterBtn) masterBtn.onclick = function () { appState.showMasterEnding = true; renderMenuScreen(); };
+
+          var roleBtns = document.querySelectorAll('[data-select-role]');
+          for (var i = 0; i < roleBtns.length; i++) {
+            roleBtns[i].onclick = function () {
+              var id = this.getAttribute('data-select-role');
+              var found = ROLES.find(function (r) { return r.id === id; });
+              if (found) startRoleGame(found);
+            };
+          }
+
+          if (appState.showGuide) {
+            document.getElementById('btn-close-guide').onclick = function () { appState.showGuide = false; renderMenuScreen(); };
+            document.getElementById('btn-ok-guide').onclick = function () { appState.showGuide = false; renderMenuScreen(); };
+          }
+          if (appState.showTable) {
+            document.getElementById('btn-close-table').onclick = function () { appState.showTable = false; renderMenuScreen(); };
+            document.getElementById('btn-ok-table').onclick = function () { appState.showTable = false; renderMenuScreen(); };
+          }
+          if (appState.showMasterEnding) {
+            document.getElementById('btn-close-master').onclick = function () { appState.showMasterEnding = false; renderMenuScreen(); };
+            document.getElementById('btn-done-master').onclick = function () { appState.showMasterEnding = false; renderMenuScreen(); };
+            document.getElementById('btn-reset-all').onclick = function () {
+              appState.clearedRoles = [];
+              saveClearedRoles([]);
+              appState.showMasterEnding = false;
+              renderMenuScreen();
+            };
+          }
+        }
+
+        // -------------------------------------------------------------------
+        // 7. ACTIVE GAME VIEW & 60FPS LOOP
+        // -------------------------------------------------------------------
+        function startRoleGame(role) {
+          stopGameLoop();
+          appState.activeRole = role;
+
+          var g = {
+            role: role,
+            stepIndex: 0,
+            reputation: 100,
+            carryingItem: null,
+            nearbyNpc: null,
+            toastMsg: null,
+            toastTimer: 0,
+            dialogueModal: null,
+            quizModalOpen: false,
+            quizIndex: 0,
+            quizFeedback: null,
+            failureInfo: null,
+            missionCleared: false,
+            showNotebook: false,
+            showMinimap: false,
+            discoveredTips: [],
+            player: {
+              x: role.startPos.x,
+              y: role.startPos.y,
+              vx: 0,
+              vy: 0,
+              facing: 'down',
+              isBowing: false,
+              carryingItem: null,
+              walkTime: 0,
+              role: role,
+              bubbleText: null,
+              rudeFlashTimer: 0
+            },
+            playerBubbleTimer: 0,
+            npcs: createInitialNpcs(),
+            royal: {
+              phase: 'IDLE',
+              timer: 22,
+              x: -140,
+              y: (ROYAL_ROAD_Y_MIN + ROYAL_ROAD_Y_MAX) / 2
+            },
+            keys: {},
+            joystickVec: { x: 0, y: 0 }
+          };
+          appState.game = g;
+
+          buildGameShell();
+          syncGameHudDom();
+
+          var canvas = document.getElementById('game-canvas');
+          var ctx = canvas.getContext('2d');
+          var lastTime = performance.now();
+          var elapsedTotal = 0;
+          var uiAccum = 0;
+
+          function isPaused() {
+            return Boolean(g.dialogueModal || g.quizModalOpen || g.failureInfo || g.missionCleared || g.showNotebook || g.showMinimap);
+          }
+
+          function showToast(msg) {
+            g.toastMsg = msg;
+            g.toastTimer = 3.2;
+            syncGameHudDom();
+          }
+
+          function recordTip(npcName, roleTitle, tip) {
+            if (!g.discoveredTips.some(function (t) { return t.npcName === npcName; })) {
+              g.discoveredTips.push({ npcName: npcName, roleTitle: roleTitle, tip: tip });
+            }
+          }
+
+          function triggerFailure(info) {
+            SoundEngine.playPenalty();
+            g.reputation = Math.max(0, g.reputation - 35);
+            g.keys = {};
+            g.joystickVec = { x: 0, y: 0 };
+            g.failureInfo = info;
+            syncGameHudDom();
+            renderGameModalOverlay();
+          }
+
+          function advanceQuestStep() {
+            var step = g.role.steps[g.stepIndex];
+            if (!step) return;
+            if (step.grantsCarry) {
+              g.carryingItem = step.grantsCarry;
+              g.player.carryingItem = step.grantsCarry;
+              showToast("'" + step.grantsCarry + "'을(를) 챙겼습니다!");
+            } else if (step.requiresCarry) {
+              g.carryingItem = null;
+              g.player.carryingItem = null;
+            }
+            if (step.triggersRoyalEvent && g.royal.phase === 'IDLE') {
+              g.royal.timer = 1.8;
+            }
+            if (g.stepIndex + 1 >= g.role.steps.length) {
+              SoundEngine.playMissionClear();
+              g.missionCleared = true;
+              if (appState.clearedRoles.indexOf(g.role.id) === -1) {
+                appState.clearedRoles.push(g.role.id);
+                saveClearedRoles(appState.clearedRoles);
+              }
+              renderGameModalOverlay();
+            } else {
+              SoundEngine.playStepComplete();
+              g.stepIndex += 1;
+            }
+            syncGameHudDom();
+          }
+
+          function toggleBow() {
+            if (isPaused()) return;
+            g.player.isBowing = !g.player.isBowing;
+            if (g.player.isBowing) {
+              SoundEngine.playBow();
+              g.player.bubbleText = g.royal.phase !== 'IDLE' ? '엎드려 절합니다!' : '문안 인사 올립니다!';
+              g.playerBubbleTimer = 1.6;
+            } else {
+              g.player.bubbleText = null;
+            }
+            syncGameHudDom();
+          }
+
+          function triggerRudeAction() {
+            if (isPaused()) return;
+            g.player.rudeFlashTimer = 0.45;
+            g.player.isBowing = false;
+            var p = g.player;
+            if (g.royal.phase === 'PASSING') {
+              triggerFailure({
+                reasonTitle: '임금님 어가 행렬을 향해 무례한 행동을 했습니다!',
+                historicalFeedback: '조선시대에는 임금님의 어가가 지나갈 때 모두 길가로 비켜 예를 갖추어야 했어요. 왕 앞에서의 무례함은 가장 큰 벌을 받았습니다.'
+              });
+              return;
+            }
+            var nearbyHigher = g.npcs.find(function (n) {
+              return mustBowToNpc(g.role.rank, n.rank) && Math.hypot(n.currentX - p.x, n.currentY - p.y) < 135;
+            });
+            if (nearbyHigher) {
+              triggerFailure({
+                reasonTitle: nearbyHigher.name + '(' + nearbyHigher.roleTitle + ')께 무례한 행동을 했습니다!',
+                historicalFeedback: '조선시대에는 신분 질서가 매우 엄격했어요. ' + g.role.rankLabel + '이(가) 윗 신분인 ' + nearbyHigher.roleTitle + '에게 거칠게 행동하면 불경죄로 관아에 끌려갔습니다.'
+              });
+              return;
+            }
+            SoundEngine.playInteract();
+            p.bubbleText = '조심해서 행동해야지...';
+            g.playerBubbleTimer = 1.5;
+            g.reputation = Math.max(20, g.reputation - 5);
+            syncGameHudDom();
+          }
+
+          function handleInteract() {
+            if (isPaused()) return;
+            var p = g.player;
+            var closest = null;
+            var bestDist = 88;
+            for (var i = 0; i < g.npcs.length; i++) {
+              var n = g.npcs[i];
+              var d = Math.hypot(n.currentX - p.x, n.currentY - p.y);
+              if (d < bestDist) {
+                bestDist = d;
+                closest = n;
+              }
+            }
+            if (!closest) return;
+
+            if (mustBowToNpc(g.role.rank, closest.rank) && closest.greetedTimer <= 0 && !p.isBowing) {
+              SoundEngine.playInteract();
+              closest.bubbleText = '먼저 예절(Q)을 갖추어 인사하거라!';
+              closest.bubbleTimer = 2.2;
+              showToast(closest.name + '(' + closest.roleTitle + ')께 먼저 예절 버튼을 눌러 인사하세요!');
+              return;
+            }
+
+            if (mustBowToNpc(g.role.rank, closest.rank)) {
+              closest.greetedTimer = 9;
+              closest.approachWarningTimer = 0;
+            }
+
+            SoundEngine.playInteract();
+            recordTip(closest.name, closest.roleTitle, closest.historyTip);
+            g.keys = {};
+            g.joystickVec = { x: 0, y: 0 };
+
+            var activeStep = g.role.steps[g.stepIndex];
+            if (activeStep && closest.id === activeStep.targetNpcId) {
+              if (activeStep.triggersQuiz) {
+                g.quizIndex = 0;
+                g.quizFeedback = null;
+                g.quizModalOpen = true;
+                renderGameModalOverlay();
+                return;
+              }
+              g.dialogueModal = {
+                npcName: closest.name,
+                npcRole: closest.roleTitle,
+                text: activeStep.completionLine,
+                historyTip: closest.historyTip,
+                advancesQuest: true
+              };
+              syncGameHudDom();
+              renderGameModalOverlay();
+              return;
+            }
+
+            var normalLine = mustBowToNpc(g.role.rank, closest.rank)
+              ? closest.higherRankReply
+              : (g.role.rank >= 2 && closest.rank < g.role.rank ? closest.lowerRankReply : closest.defaultGreeting);
+
+            g.dialogueModal = {
+              npcName: closest.name,
+              npcRole: closest.roleTitle,
+              text: normalLine,
+              historyTip: closest.historyTip,
+              advancesQuest: false
+            };
+            syncGameHudDom();
+            renderGameModalOverlay();
+          }
+
+          function respawnPlayer() {
+            g.player.x = g.role.startPos.x;
+            g.player.y = g.role.startPos.y;
+            g.player.vx = 0;
+            g.player.vy = 0;
+            g.player.isBowing = false;
+            g.player.bubbleText = null;
+            g.player.rudeFlashTimer = 0;
+            g.reputation = 100;
+            g.npcs = createInitialNpcs();
+            g.royal = { phase: 'IDLE', timer: 20, x: -140, y: (ROYAL_ROAD_Y_MIN + ROYAL_ROAD_Y_MAX) / 2 };
+            g.failureInfo = null;
+            g.keys = {};
+            g.joystickVec = { x: 0, y: 0 };
+            syncGameHudDom();
+            renderGameModalOverlay();
+          }
+
+          // Wire game shell buttons
+          document.getElementById('btn-exit-menu').onclick = function () {
+            window.removeEventListener('keydown', onKeyDown);
+            window.removeEventListener('keyup', onKeyUp);
+            appState.activeRole = null;
+            appState.game = null;
+            if (appState.clearedRoles.length === ROLES.length) {
+              appState.showMasterEnding = true;
+            }
+            renderMenuScreen();
+          };
+          document.getElementById('btn-open-map').onclick = function () { g.showMinimap = true; g.keys = {}; renderGameModalOverlay(); };
+          document.getElementById('btn-open-notebook').onclick = function () { g.showNotebook = true; g.keys = {}; renderGameModalOverlay(); };
+          document.getElementById('btn-toggle-mute').onclick = function () {
+            SoundEngine.muted = !SoundEngine.muted;
+            syncGameHudDom();
+          };
+          document.getElementById('btn-royal-bow').onclick = toggleBow;
+          document.getElementById('btn-action-bow').onclick = toggleBow;
+          document.getElementById('btn-action-talk').onclick = handleInteract;
+          document.getElementById('btn-action-rude').onclick = triggerRudeAction;
+
+          // Virtual Joystick Pointer Events
+          var joyZone = document.getElementById('joystick-zone');
+          var joyKnob = document.getElementById('joystick-knob');
+          var activePointerId = null;
+          var maxRadius = 36;
+
+          function updateJoy(clientX, clientY) {
+            var rect = joyZone.getBoundingClientRect();
+            var cx = rect.left + rect.width / 2;
+            var cy = rect.top + rect.height / 2;
+            var dx = clientX - cx;
+            var dy = clientY - cy;
+            var dist = Math.hypot(dx, dy);
+            if (dist > maxRadius) {
+              dx = (dx / dist) * maxRadius;
+              dy = (dy / dist) * maxRadius;
+            }
+            joyKnob.style.transform = 'translate(' + dx + 'px, ' + dy + 'px)';
+            if (dist < 6) {
+              g.joystickVec = { x: 0, y: 0 };
+            } else {
+              g.joystickVec = { x: dx / maxRadius, y: dy / maxRadius };
+            }
+          }
+
+          function resetJoy() {
+            activePointerId = null;
+            joyKnob.style.transform = 'translate(0px, 0px)';
+            g.joystickVec = { x: 0, y: 0 };
+          }
+
+          joyZone.addEventListener('pointerdown', function (e) {
+            joyZone.setPointerCapture(e.pointerId);
+            activePointerId = e.pointerId;
+            updateJoy(e.clientX, e.clientY);
+          });
+          joyZone.addEventListener('pointermove', function (e) {
+            if (activePointerId === e.pointerId) updateJoy(e.clientX, e.clientY);
+          });
+          joyZone.addEventListener('pointerup', function (e) {
+            if (activePointerId === e.pointerId) resetJoy();
+          });
+          joyZone.addEventListener('pointercancel', resetJoy);
+
+          // Keyboard Listeners
+          function onKeyDown(e) {
+            if (!appState.activeRole) return;
+            var k = e.key.toLowerCase();
+            g.keys[k] = true;
+            if ((k === 'arrowup' || k === 'arrowdown' || k === 'arrowleft' || k === 'arrowright' || k === ' ') && !isPaused()) {
+              e.preventDefault();
+            }
+            if (e.repeat) return;
+            if (k === 'q' || k === 'shift' || k === 'f') {
+              toggleBow();
+            } else if (k === ' ' || k === 'enter' || k === 'e') {
+              if (g.dialogueModal) {
+                var adv = g.dialogueModal.advancesQuest;
+                g.dialogueModal = null;
+                renderGameModalOverlay();
+                if (adv) advanceQuestStep();
+              } else {
+                handleInteract();
+              }
+            } else if (k === 'x' || k === 'r') {
+              triggerRudeAction();
+            }
+          }
+
+          function onKeyUp(e) {
+            g.keys[e.key.toLowerCase()] = false;
+          }
+
+          window.addEventListener('keydown', onKeyDown);
+          window.addEventListener('keyup', onKeyUp);
+
+          // Exposing modal callbacks via g._actions
+          g._actions = {
+            closeDialogue: function () {
+              var adv = g.dialogueModal && g.dialogueModal.advancesQuest;
+              g.dialogueModal = null;
+              renderGameModalOverlay();
+              if (adv) advanceQuestStep();
+            },
+            chooseQuiz: function (idx) {
+              var q = GWAGEO_QUIZ[g.quizIndex];
+              if (idx === q.correctIndex) {
+                SoundEngine.playStepComplete();
+                g.quizFeedback = { correct: true, text: '정답입니다! ' + q.explanation };
+              } else {
+                SoundEngine.playPenalty();
+                g.quizFeedback = { correct: false, text: '아쉽습니다! 조선시대 신분 질서를 다시 떠올려 보세요.' };
+              }
+              renderGameModalOverlay();
+            },
+            nextQuiz: function () {
+              if (g.quizIndex + 1 < GWAGEO_QUIZ.length) {
+                g.quizIndex += 1;
+                g.quizFeedback = null;
+                renderGameModalOverlay();
+              } else {
+                g.quizModalOpen = false;
+                renderGameModalOverlay();
+                advanceQuestStep();
+              }
+            },
+            respawn: respawnPlayer,
+            exitToMenu: function () { document.getElementById('btn-exit-menu').click(); },
+            closeNotebook: function () { g.showNotebook = false; renderGameModalOverlay(); },
+            closeMinimap: function () { g.showMinimap = false; renderGameModalOverlay(); }
+          };
+
+          function tick(now) {
+            if (!appState.activeRole) return;
+            var dt = Math.min(0.05, (now - lastTime) / 1000);
+            lastTime = now;
+
+            if (g.toastTimer > 0) {
+              g.toastTimer -= dt;
+              if (g.toastTimer <= 0) {
+                g.toastMsg = null;
+                syncGameHudDom();
+              }
+            }
+
+            if (!isPaused()) {
+              elapsedTotal += dt;
+              var p = g.player;
+
+              if (g.playerBubbleTimer > 0) {
+                g.playerBubbleTimer -= dt;
+                if (g.playerBubbleTimer <= 0) p.bubbleText = null;
+              }
+              if (p.rudeFlashTimer > 0) {
+                p.rudeFlashTimer = Math.max(0, p.rudeFlashTimer - dt);
+              }
+
+              var ix = g.joystickVec.x;
+              var iy = g.joystickVec.y;
+              if (g.keys['arrowleft'] || g.keys['a']) ix -= 1;
+              if (g.keys['arrowright'] || g.keys['d']) ix += 1;
+              if (g.keys['arrowup'] || g.keys['w']) iy -= 1;
+              if (g.keys['arrowdown'] || g.keys['s']) iy += 1;
+
+              var mag = Math.hypot(ix, iy);
+              if (mag > 1) { ix /= mag; iy /= mag; }
+
+              var heavyPenalty = g.carryingItem && g.carryingItem.indexOf('쌀가마니') !== -1 ? 0.72 : 1;
+              var bowFactor = p.isBowing ? 0 : 1;
+              var speed = g.role.baseSpeed * heavyPenalty * bowFactor;
+
+              p.vx = ix * speed;
+              p.vy = iy * speed;
+
+              if (Math.abs(p.vx) > 2 || Math.abs(p.vy) > 2) {
+                p.walkTime += dt;
+                if (Math.abs(p.vx) > Math.abs(p.vy)) {
+                  p.facing = p.vx > 0 ? 'right' : 'left';
+                } else {
+                  p.facing = p.vy > 0 ? 'down' : 'up';
+                }
+              }
+
+              var nextX = p.x + p.vx * dt;
+              if (!isColliding(nextX, p.y, 14)) p.x = nextX;
+              var nextY = p.y + p.vy * dt;
+              if (!isColliding(p.x, nextY, 14)) p.y = nextY;
+
+              // Royal Procession
+              var royal = g.royal;
+              if (royal.phase === 'IDLE') {
+                royal.timer -= dt;
+                if (royal.timer <= 0) {
+                  royal.phase = 'WARNING';
+                  royal.timer = 4.6;
+                  royal.x = -160;
+                  SoundEngine.playRoyalHorn();
+                }
+              } else if (royal.phase === 'WARNING') {
+                royal.timer -= dt;
+                if (royal.timer <= 0) {
+                  royal.phase = 'PASSING';
+                  royal.x = -140;
+                }
+              } else if (royal.phase === 'PASSING') {
+                royal.x += 205 * dt;
+                var hDist = Math.abs(p.x - royal.x);
+                var onRoyalRoad = p.y >= ROYAL_ROAD_Y_MIN + 2 && p.y <= ROYAL_ROAD_Y_MAX - 2;
+                var nearRoyalSight = Math.abs(p.y - royal.y) < 250 && hDist < 360;
+
+                if (onRoyalRoad && hDist < 420) {
+                  triggerFailure({
+                    reasonTitle: '임금님 어가가 지나가는 큰길에서 비키지 않았습니다!',
+                    historicalFeedback: '왕의 행차가 시작되면 양반을 포함한 모든 사람은 가운데 큰길 밖 가장자리로 물러나 예를 갖추어야 했어요.'
+                  });
+                } else if (nearRoyalSight && !p.isBowing) {
+                  triggerFailure({
+                    reasonTitle: '임금님 어가 행렬 앞에서 엎드려 절하지 않았습니다!',
+                    historicalFeedback: '조선시대에 임금님은 나라에서 가장 높은 분이었어요. 어가가 지나갈 때는 길가에 물러나 공경하는 예를 보였습니다.'
+                  });
+                }
+
+                if (royal.x > MAP_WIDTH + 180) {
+                  royal.phase = 'IDLE';
+                  royal.timer = 32;
+                  g.reputation = Math.min(100, g.reputation + 10);
+                  showToast('임금님 어가 행차를 예법대로 무사히 맞이했습니다! (+10 평판)');
+                }
+              }
+
+              // Update NPCs
+              var closestNpc = null;
+              var closestDist = 88;
+              for (var i = 0; i < g.npcs.length; i++) {
+                var npc = g.npcs[i];
+                if (npc.greetedTimer > 0) npc.greetedTimer = Math.max(0, npc.greetedTimer - dt);
+                if (npc.bubbleTimer > 0) {
+                  npc.bubbleTimer -= dt;
+                  if (npc.bubbleTimer <= 0) npc.bubbleText = null;
+                }
+
+                var dPlayer = Math.hypot(npc.currentX - p.x, npc.currentY - p.y);
+                if (dPlayer < closestDist) {
+                  closestDist = dPlayer;
+                  closestNpc = npc;
+                }
+
+                // Royal etiquette across entire village
+                var onHazard = npc.currentY >= ROYAL_ROAD_Y_MIN - 24 && npc.currentY <= ROYAL_ROAD_Y_MAX + 24;
+                if (royal.phase === 'IDLE') {
+                  npc.royalPosture = null;
+                  npc.royalBubbleShown = false;
+                } else {
+                  npc.isBowingToPlayer = false;
+                  if (onHazard) {
+                    var stepDir = npc.currentY < royal.y ? -1 : 1;
+                    npc.vx = 0;
+                    npc.vy = stepDir * 140;
+                    npc.currentY += npc.vy * dt;
+                    npc.royalPosture = null;
+                  } else {
+                    npc.vx = 0;
+                    npc.vy = 0;
+                    if (royal.phase === 'PASSING' || (royal.phase === 'WARNING' && royal.timer < 2.3)) {
+                      npc.royalPosture = npc.royalEtiquette;
+                    }
+                    if (royal.phase === 'PASSING' && !npc.royalBubbleShown && Math.abs(npc.currentX - royal.x) < 420) {
+                      npc.royalBubbleShown = true;
+                      npc.bubbleTimer = 3.2;
+                      if (npc.royalEtiquette === 'gukgung') {
+                        npc.bubbleText = '서서 허리를 숙여 국궁(鞠躬)하옵니다!';
+                      } else if (npc.royalEtiquette === 'eup') {
+                        npc.bubbleText = '종친으로서 가볍게 읍(揖)을 올리옵니다';
+                      } else if (npc.rank >= 2) {
+                        npc.bubbleText = '길가에 엎드려 예를 올립니다!';
+                      } else {
+                        npc.bubbleText = '용안을 뵐 수 없으니 엎드리자!';
+                      }
+                    }
+                  }
+                }
+
+                if (royal.phase === 'IDLE' && npc.patrolPoints && npc.patrolPoints.length > 1 && !npc.isBowingToPlayer) {
+                  var pt = npc.patrolPoints[npc.patrolIndex];
+                  var dx = pt.x - npc.currentX;
+                  var dy = pt.y - npc.currentY;
+                  var dist = Math.hypot(dx, dy);
+                  var spd = npc.speed || 65;
+                  if (dist < 6) {
+                    npc.patrolIndex = (npc.patrolIndex + 1) % npc.patrolPoints.length;
+                    npc.vx = 0; npc.vy = 0;
+                  } else {
+                    npc.vx = (dx / dist) * spd;
+                    npc.vy = (dy / dist) * spd;
+                    npc.currentX += npc.vx * dt;
+                    npc.currentY += npc.vy * dt;
+                  }
+                } else if (royal.phase === 'IDLE') {
+                  npc.vx = 0; npc.vy = 0;
+                }
+
+                if (royal.phase === 'IDLE' && g.role.rank >= 2 && npc.rank < g.role.rank) {
+                  if (dPlayer < 115) {
+                    npc.isBowingToPlayer = true;
+                    if (npc.greetedTimer <= 0) {
+                      npc.greetedTimer = 9;
+                      npc.bubbleText = npc.lowerRankReply;
+                      npc.bubbleTimer = 2.6;
+                    }
+                  } else {
+                    npc.isBowingToPlayer = false;
+                  }
+                }
+
+                if (royal.phase === 'IDLE' && mustBowToNpc(g.role.rank, npc.rank) && npc.greetedTimer <= 0) {
+                  if (dPlayer < 27 && !p.isBowing) {
+                    triggerFailure({
+                      reasonTitle: '길에서 윗 신분(' + npc.name + ' · ' + npc.roleTitle + ')과 부딪혔습니다!',
+                      historicalFeedback: '조선시대에는 ' + g.role.rankLabel + '이(가) 자신보다 높은 ' + npc.roleTitle + '의 앞길을 가로막거나 부딪히는 것을 큰 결례로 여겨 엄하게 벌했습니다.'
+                    });
+                    break;
+                  }
+                  if (dPlayer < 105) {
+                    if (p.isBowing) {
+                      npc.greetedTimer = 9.5;
+                      npc.approachWarningTimer = 0;
+                      npc.bubbleText = npc.higherRankReply;
+                      npc.bubbleTimer = 2.8;
+                      SoundEngine.playBow();
+                      g.reputation = Math.min(100, g.reputation + 2);
+                    } else {
+                      npc.approachWarningTimer += dt;
+                      if (!npc.bubbleText) {
+                        npc.bubbleText = '예절(Q)을 갖추어 인사하거라!';
+                        npc.bubbleTimer = 1.2;
+                      }
+                      if (npc.approachWarningTimer >= 2.5) {
+                        triggerFailure({
+                          reasonTitle: npc.name + '(' + npc.roleTitle + ') 앞에서 고개 숙여 인사하지 않았습니다!',
+                          historicalFeedback: '조선시대에는 길에서 윗 신분을 만나면 걸음을 멈추고 공손히 인사해야 했어요. 인사를 하지 않으면 신분 질서를 어긴 불경죄로 처벌받았습니다.'
+                        });
+                        break;
+                      }
+                    }
+                  } else if (npc.approachWarningTimer > 0.45 && dPlayer >= 112) {
+                    triggerFailure({
+                      reasonTitle: npc.name + '(' + npc.roleTitle + ')께 인사를 생략하고 지나갔습니다!',
+                      historicalFeedback: g.role.rankLabel + '은(는) 자신보다 높은 ' + npc.roleTitle + '을(를) 마주치면 반드시 멈춰 서서 인사를 드린 뒤에 지나가야 했어요.'
+                    });
+                    break;
+                  } else {
+                    npc.approachWarningTimer = 0;
+                  }
+                }
+              }
+
+              g.nearbyNpc = closestNpc;
+              uiAccum += dt;
+              if (uiAccum >= 0.1) {
+                uiAccum = 0;
+                syncGameHudDom();
+              }
+            }
+
+            var activeStep = g.role.steps[g.stepIndex];
+            var camX = Math.max(0, Math.min(MAP_WIDTH - VIEW_W, g.player.x - VIEW_W / 2));
+            var camY = Math.max(0, Math.min(MAP_HEIGHT - VIEW_H, g.player.y - VIEW_H / 2));
+            renderJoseonWorld(ctx, {
+              player: g.player,
+              npcs: g.npcs,
+              royal: g.royal,
+              targetNpcId: activeStep ? activeStep.targetNpcId : null,
+              timeSec: elapsedTotal,
+              cameraX: camX,
+              cameraY: camY
+            });
+
+            animFrameId = requestAnimationFrame(tick);
+          }
+
+          animFrameId = requestAnimationFrame(tick);
+        }
+
+        function buildGameShell() {
+          var role = appState.game.role;
+          rootEl.innerHTML =
+            '<div class="hanji-surface">' +
+              '<header class="game-hud"><div class="game-hud-inner">' +
+                '<div class="hud-left">' +
+                  '<button id="btn-exit-menu" class="btn-secondary" style="padding:6px 12px;">' + ICONS.back + ' 신분 도감</button>' +
+                  '<span style="font-weight:700;color:' + role.accentHex + ';white-space:nowrap;">' + escapeHtml(role.rankLabel) + '</span>' +
+                  '<span aria-hidden="true" style="color:#9E8F79;">·</span>' +
+                  '<span class="font-serif-kr" style="font-weight:700;white-space:nowrap;">' + escapeHtml(role.characterName) + '</span>' +
+                '</div>' +
+                '<div class="hud-center">' +
+                  '<div class="reputation-wrap">' +
+                    '<span style="font-weight:600;color:#594F46;white-space:nowrap;">예절 평판</span>' +
+                    '<div class="reputation-track"><div id="rep-fill" class="reputation-fill" style="width:100%;"></div></div>' +
+                    '<strong id="rep-text" class="tabular-nums">100/100</strong>' +
+                  '</div>' +
+                  '<span id="hud-carry" class="hidden" style="font-size:12.5px;font-weight:600;color:#7C5438;"></span>' +
+                '</div>' +
+                '<div class="hud-right">' +
+                  '<button id="btn-open-map" class="btn-secondary" style="padding:6px 10px;font-size:12px;">' + ICONS.map + ' 마을 지도</button>' +
+                  '<button id="btn-open-notebook" class="btn-secondary" style="padding:6px 10px;font-size:12px;">' + ICONS.book + ' <span id="notebook-count">역사 노트 (0)</span></button>' +
+                  '<button id="btn-toggle-mute" class="btn-secondary" style="padding:6px 9px;" aria-label="소리 켜기 또는 끄기">' + ICONS.volOn + '</button>' +
+                '</div>' +
+              '</div></header>' +
+              '<main class="game-main">' +
+                '<div class="hanji-card quest-strip">' +
+                  '<div class="quest-strip-left">' +
+                    '<span style="margin-top:2px;">' + ICONS.compass + '</span>' +
+                    '<div>' +
+                      '<div class="quest-meta">' +
+                        '<strong id="quest-step-num" class="tabular-nums" style="color:#1E4D7B;"></strong>' +
+                        '<span aria-hidden="true">·</span>' +
+                        '<span id="quest-location"></span>' +
+                      '</div>' +
+                      '<div id="quest-title" class="quest-title"></div>' +
+                      '<div id="quest-hint" class="quest-hint"></div>' +
+                    '</div>' +
+                  '</div>' +
+                '</div>' +
+                '<div id="royal-alert" class="royal-alert hidden" role="alert">' +
+                  '<div style="display:flex;align-items:center;gap:10px;">' + ICONS.alert + '<span id="royal-alert-text"></span></div>' +
+                  '<button id="btn-royal-bow" class="royal-alert-btn">지금 엎드리기</button>' +
+                '</div>' +
+                '<div class="canvas-stage">' +
+                  '<canvas id="game-canvas" width="960" height="580"></canvas>' +
+                  '<div id="toast-banner" class="toast-banner hidden"></div>' +
+                  '<div id="talk-prompt" class="talk-prompt hidden"></div>' +
+                  '<div id="joystick-zone" class="joystick-zone" aria-label="이동 조이스틱">' +
+                    '<div class="joystick-ring"></div>' +
+                    '<div id="joystick-knob" class="joystick-knob"></div>' +
+                  '</div>' +
+                  '<div class="action-pad">' +
+                    '<button id="btn-action-rude" class="action-btn btn-rude" title="무례한 행동 (X)">무례한 행동 (X)</button>' +
+                    '<button id="btn-action-bow" class="action-btn btn-bow" title="예절 (Q / Shift)"><span id="bow-label">예절 · 절하기</span><small id="bow-sub">Q / Shift</small></button>' +
+                    '<button id="btn-action-talk" class="action-btn btn-talk" disabled title="대화 / 상호작용 (Space)"><span>대화 · 행동</span><small>Space</small></button>' +
+                  '</div>' +
+                '</div>' +
+                '<div class="controls-footer">' +
+                  '<span>이동: WASD / 방향키 / 왼쪽 조이스틱 · 대화: Space / Enter · 예절(인사·절): Q / Shift</span>' +
+                  '<span>양반·중인을 만나면 멈춰서 예절을 지키고, 왕의 행차 때는 큰길 밖으로 비켜 엎드리세요.</span>' +
+                '</div>' +
+              '</main>' +
+              '<div id="game-modal-root"></div>' +
+            '</div>';
+        }
+
+        function syncGameHudDom() {
+          var g = appState.game;
+          if (!g) return;
+          var repFill = document.getElementById('rep-fill');
+          var repText = document.getElementById('rep-text');
+          if (repFill && repText) {
+            repFill.style.width = g.reputation + '%';
+            repFill.style.backgroundColor = g.reputation >= 60 ? '#2F6B48' : '#C23B2B';
+            repText.textContent = g.reputation + '/100';
+          }
+
+          var carryEl = document.getElementById('hud-carry');
+          if (carryEl) {
+            if (g.carryingItem) {
+              carryEl.classList.remove('hidden');
+              carryEl.textContent = '· 소지품: ' + g.carryingItem;
+            } else {
+              carryEl.classList.add('hidden');
+            }
+          }
+
+          var nbEl = document.getElementById('notebook-count');
+          if (nbEl) nbEl.textContent = '역사 노트 (' + g.discoveredTips.length + ')';
+
+          var muteBtn = document.getElementById('btn-toggle-mute');
+          if (muteBtn) muteBtn.innerHTML = SoundEngine.muted ? ICONS.volOff : ICONS.volOn;
+
+          var step = g.role.steps[g.stepIndex];
+          if (step) {
+            var npcObj = NPCS.find(function (n) { return n.id === step.targetNpcId; });
+            document.getElementById('quest-step-num').textContent = '미션 ' + (g.stepIndex + 1) + ' / ' + g.role.steps.length;
+            document.getElementById('quest-location').textContent = '목표 위치: ' + (npcObj ? npcObj.locationZone + ' · ' + npcObj.name : '');
+            document.getElementById('quest-title').textContent = step.title;
+            document.getElementById('quest-hint').textContent = step.targetHint;
+          }
+
+          var royalAlert = document.getElementById('royal-alert');
+          var royalAlertText = document.getElementById('royal-alert-text');
+          var royalBowBtn = document.getElementById('btn-royal-bow');
+          if (royalAlert) {
+            if (g.royal.phase === 'IDLE') {
+              royalAlert.classList.add('hidden');
+            } else {
+              royalAlert.classList.remove('hidden');
+              royalAlertText.textContent = g.royal.phase === 'WARNING'
+                ? '임금님의 어가가 곧 행차합니다! (' + Math.max(0, Math.ceil(g.royal.timer)) + '초) 가운데 큰길 밖으로 비키세요!'
+                : '어가 행차 중! 길 밖에서 [예절(엎드려 절)] 상태를 유지하세요!';
+              royalBowBtn.textContent = g.player.isBowing ? '엎드리는 중' : '지금 엎드리기';
+            }
+          }
+
+          var toastEl = document.getElementById('toast-banner');
+          if (toastEl) {
+            if (g.toastMsg) {
+              toastEl.classList.remove('hidden');
+              toastEl.textContent = g.toastMsg;
+            } else {
+              toastEl.classList.add('hidden');
+            }
+          }
+
+          var promptEl = document.getElementById('talk-prompt');
+          var talkBtn = document.getElementById('btn-action-talk');
+          if (promptEl && talkBtn) {
+            if (g.nearbyNpc && !g.dialogueModal) {
+              promptEl.classList.remove('hidden');
+              promptEl.textContent = g.nearbyNpc.name + ' (' + g.nearbyNpc.roleTitle + ') · [Space] 대화하기';
+              talkBtn.disabled = false;
+            } else {
+              promptEl.classList.add('hidden');
+              talkBtn.disabled = !g.nearbyNpc;
+            }
+          }
+
+          var bowBtn = document.getElementById('btn-action-bow');
+          var bowLabel = document.getElementById('bow-label');
+          var bowSub = document.getElementById('bow-sub');
+          if (bowBtn && bowLabel && bowSub) {
+            if (g.player.isBowing) {
+              bowBtn.classList.add('active');
+              bowLabel.textContent = '예절 유지 중';
+              bowSub.textContent = '다시 누르면 일어남';
+            } else {
+              bowBtn.classList.remove('active');
+              bowLabel.textContent = '예절 · 절하기';
+              bowSub.textContent = 'Q / Shift';
+            }
+          }
+        }
+
+        function renderGameModalOverlay() {
+          var g = appState.game;
+          var root = document.getElementById('game-modal-root');
+          if (!g || !root) return;
+
+          if (g.dialogueModal) {
+            var d = g.dialogueModal;
+            root.innerHTML =
+              '<div class="modal-backdrop" role="dialog" aria-modal="true">' +
+                '<div class="hanji-card modal-card">' +
+                  '<div class="modal-header">' +
+                    '<div style="display:flex;align-items:center;gap:8px;">' +
+                      '<strong class="font-serif-kr" style="font-size:19px;">' + escapeHtml(d.npcName) + '</strong>' +
+                      '<span style="color:#9E8F79;">·</span>' +
+                      '<span style="color:#1E4D7B;font-weight:600;font-size:14px;">' + escapeHtml(d.npcRole) + '</span>' +
+                    '</div>' +
+                    (d.advancesQuest ? '<span style="font-size:12.5px;font-weight:700;color:#2F6B48;">미션 진행</span>' : '') +
+                  '</div>' +
+                  '<p style="margin:16px 0;font-size:16px;font-weight:500;line-height:1.6;">“' + escapeHtml(d.text) + '”</p>' +
+                  '<div class="info-box"><strong style="color:#7C5438;display:block;margin-bottom:4px;">역사 돋보기 (역사 노트에 기록됨)</strong>' + escapeHtml(d.historyTip) + '</div>' +
+                  '<div style="margin-top:18px;text-align:right;"><button id="btn-dialogue-ok" class="btn-primary">' + (d.advancesQuest ? '확인하고 다음 단계로' : '대화 마치기') + '</button></div>' +
+                '</div>' +
+              '</div>';
+            document.getElementById('btn-dialogue-ok').onclick = g._actions.closeDialogue;
+            return;
+          }
+
+          if (g.quizModalOpen) {
+            var q = GWAGEO_QUIZ[g.quizIndex];
+            var choicesHtml = q.choices.map(function (c, idx) {
+              return '<button class="quiz-choice" data-quiz-choice="' + idx + '" ' + (g.quizFeedback && g.quizFeedback.correct ? 'disabled' : '') + '>' + (idx + 1) + '. ' + escapeHtml(c) + '</button>';
+            }).join('');
+            var fbHtml = g.quizFeedback
+              ? '<div class="quiz-feedback ' + (g.quizFeedback.correct ? 'ok' : 'err') + '">' + escapeHtml(g.quizFeedback.text) + '</div>'
+              : '';
+            var nextBtn = g.quizFeedback && g.quizFeedback.correct
+              ? '<div style="margin-top:16px;text-align:right;"><button id="btn-quiz-next" class="btn-primary">' + (g.quizIndex + 1 < GWAGEO_QUIZ.length ? '다음 문제' : '과거 급제 완료!') + '</button></div>'
+              : '';
+
+            root.innerHTML =
+              '<div class="modal-backdrop" role="dialog" aria-modal="true">' +
+                '<div class="hanji-card modal-card">' +
+                  '<div class="modal-header">' +
+                    '<h2 class="font-serif-kr" style="font-size:20px;font-weight:700;">청학 서당 · 과거 시험 (문과)</h2>' +
+                    '<span class="tabular-nums" style="font-size:13.5px;font-weight:700;color:#1E4D7B;">문제 ' + (g.quizIndex + 1) + ' / ' + GWAGEO_QUIZ.length + '</span>' +
+                  '</div>' +
+                  '<p style="margin:16px 0;font-size:15.5px;font-weight:700;line-height:1.55;">' + escapeHtml(q.question) + '</p>' +
+                  '<div style="display:flex;flex-direction:column;gap:8px;">' + choicesHtml + '</div>' +
+                  fbHtml + nextBtn +
+                '</div>' +
+              '</div>';
+
+            var qBtns = document.querySelectorAll('[data-quiz-choice]');
+            for (var qi = 0; qi < qBtns.length; qi++) {
+              qBtns[qi].onclick = function () { g._actions.chooseQuiz(Number(this.getAttribute('data-quiz-choice'))); };
+            }
+            var nBtn = document.getElementById('btn-quiz-next');
+            if (nBtn) nBtn.onclick = g._actions.nextQuiz;
+            return;
+          }
+
+          if (g.failureInfo) {
+            var f = g.failureInfo;
+            root.innerHTML =
+              '<div class="modal-backdrop" role="dialog" aria-modal="true">' +
+                '<div class="hanji-card modal-card" style="max-width:460px;text-align:center;">' +
+                  '<div style="width:54px;height:54px;margin:0 auto 12px;border-radius:999px;background:#F9E5E3;border:1px solid rgba(194,59,43,0.4);display:flex;align-items:center;justify-content:center;color:#C23B2B;">' + ICONS.alert + '</div>' +
+                  '<h2 class="font-serif-kr" style="font-size:22px;font-weight:700;color:#C23B2B;">불경죄로 관아에 끌려갔습니다!</h2>' +
+                  '<p style="margin-top:8px;font-size:14px;font-weight:700;">' + escapeHtml(f.reasonTitle) + '</p>' +
+                  '<div class="info-box" style="margin-top:14px;text-align:left;"><strong style="color:#7C5438;display:block;margin-bottom:4px;">왜 실패했을까요?</strong>' + escapeHtml(f.historicalFeedback) + '</div>' +
+                  '<div style="margin-top:20px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap;">' +
+                    '<button id="btn-fail-menu" class="btn-secondary">신분 도감</button>' +
+                    '<button id="btn-fail-respawn" class="btn-primary" style="background-color:#C23B2B;">' + ICONS.reset + ' 시작 지점에서 다시 도전하기</button>' +
+                  '</div>' +
+                '</div>' +
+              '</div>';
+            document.getElementById('btn-fail-menu').onclick = g._actions.exitToMenu;
+            document.getElementById('btn-fail-respawn').onclick = g._actions.respawn;
+            return;
+          }
+
+          if (g.missionCleared) {
+            var r = g.role;
+            root.innerHTML =
+              '<div class="modal-backdrop" role="dialog" aria-modal="true">' +
+                '<div class="hanji-card modal-card">' +
+                  '<div class="modal-header">' +
+                    '<div style="display:flex;align-items:center;gap:12px;">' +
+                      portraitSvg(r.id, 62) +
+                      '<div><p style="font-size:12.5px;font-weight:700;color:#2F6B48;">' + escapeHtml(r.rankLabel) + ' 체험 완료</p><h2 class="font-serif-kr" style="font-size:21px;font-weight:700;">' + escapeHtml(r.characterName) + '의 하루를 완수했어요!</h2></div>' +
+                    '</div>' +
+                    stampSvg('완수', 54) +
+                  '</div>' +
+                  '<div style="margin-top:16px;display:flex;flex-direction:column;gap:10px;">' +
+                    '<div class="info-box"><strong style="color:#1E4D7B;display:block;margin-bottom:2px;">권리와 혜택</strong>' + escapeHtml(r.summaryPoints.privilege) + '</div>' +
+                    '<div class="info-box"><strong style="color:#C88A1E;display:block;margin-bottom:2px;">의무와 책임</strong>' + escapeHtml(r.summaryPoints.duty) + '</div>' +
+                    '<div class="info-box"><strong style="color:#2F6B48;display:block;margin-bottom:2px;">생활 모습</strong>' + escapeHtml(r.summaryPoints.dailyLife) + '</div>' +
+                  '</div>' +
+                  '<div style="margin-top:20px;text-align:right;"><button id="btn-clear-next" class="btn-primary">다른 신분 선택하기</button></div>' +
+                '</div>' +
+              '</div>';
+            document.getElementById('btn-clear-next').onclick = g._actions.exitToMenu;
+            return;
+          }
+
+          if (g.showNotebook) {
+            var tipsHtml = g.discoveredTips.length === 0
+              ? '<p style="text-align:center;color:#594F46;padding:28px 0;font-size:14px;">아직 기록된 역사 이야기가 없어요. 마을 사람들에게 가까이 다가가 Space(대화)를 눌러 보세요!</p>'
+              : g.discoveredTips.map(function (t) {
+                  return '<div class="info-box"><strong style="color:#1E4D7B;display:block;margin-bottom:4px;">' + escapeHtml(t.npcName) + ' · ' + escapeHtml(t.roleTitle) + '</strong>' + escapeHtml(t.tip) + '</div>';
+                }).join('');
+            root.innerHTML =
+              '<div class="modal-backdrop" role="dialog" aria-modal="true">' +
+                '<div class="hanji-card modal-card" style="max-height:84vh;display:flex;flex-direction:column;">' +
+                  '<button class="modal-close" id="btn-close-notebook" aria-label="닫기">' + ICONS.close + '</button>' +
+                  '<h2 class="font-serif-kr" style="font-size:20px;font-weight:700;margin-bottom:12px;">마을 역사 노트 (' + g.discoveredTips.length + ' / ' + NPCS.length + ')</h2>' +
+                  '<div style="overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding-right:4px;">' + tipsHtml + '</div>' +
+                '</div>' +
+              '</div>';
+            document.getElementById('btn-close-notebook').onclick = g._actions.closeNotebook;
+            return;
+          }
+
+          if (g.showMinimap) {
+            root.innerHTML =
+              '<div class="modal-backdrop" role="dialog" aria-modal="true">' +
+                '<div class="hanji-card modal-card">' +
+                  '<button class="modal-close" id="btn-close-map" aria-label="닫기">' + ICONS.close + '</button>' +
+                  '<h2 class="font-serif-kr" style="font-size:20px;font-weight:700;">한양 아랫마을 지도</h2>' +
+                  '<div class="map-grid">' +
+                    '<div class="map-zone" style="background:#E9EFF5;"><strong style="color:#1E4D7B;display:block;">북서쪽 (왼쪽 위)</strong>김 대감 댁(양반가), 청학 서당</div>' +
+                    '<div class="map-zone" style="background:#F6EEDB;"><strong style="color:#9A6B26;display:block;">북동쪽 (오른쪽 위)</strong>한양 관아 (조 사또, 박 아전)</div>' +
+                    '<div class="map-zone" style="grid-column:span 2;background:#F9E6E4;text-align:center;"><strong style="color:#C23B2B;">가운데 가로 큰길:</strong> 임금님 어가 행차로 (대동로)</div>' +
+                    '<div class="map-zone" style="background:#E7EFE9;"><strong style="color:#2F6B48;display:block;">남서쪽 (왼쪽 아래)</strong>덕배네 초가집, 논밭, 무쇠 대장간</div>' +
+                    '<div class="map-zone" style="background:#F5EAE1;"><strong style="color:#7C5438;display:block;">남동쪽 (오른쪽 아래)</strong>저잣거리 (비단 가게, 약재방, 싸전)</div>' +
+                  '</div>' +
+                  '<div style="margin-top:16px;text-align:right;"><button id="btn-ok-map" class="btn-primary">확인</button></div>' +
+                '</div>' +
+              '</div>';
+            document.getElementById('btn-close-map').onclick = g._actions.closeMinimap;
+            document.getElementById('btn-ok-map').onclick = g._actions.closeMinimap;
+            return;
+          }
+
+          root.innerHTML = '';
+        }
+
+        // Initial Boot
+        renderMenuScreen();
+      })();
+    </script>
+  </body>
+</html>

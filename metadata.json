@@ -1,0 +1,6 @@
+{
+  "name": "조선 신분 체험기: 한양 마을의 하루",
+  "description": "초등학교 5학년 사회 과목 '조선시대의 신분 질서와 생활 모습'을 체험하는 2D 탑다운 교육용 미니 RPG",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
